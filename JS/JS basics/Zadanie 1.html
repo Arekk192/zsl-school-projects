@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      p {
+        font-family: monospace;
+        font-weight: 20;
+        font-style: italic;
+        margin: 0;
+        padding: 0;
+      }
+
+      table {
+        border-spacing: 0px;
+        border: 1px solid black;
+      }
+
+      td,
+      th {
+        width: 32px;
+        height: 32px;
+        text-align: center;
+        border: 1px solid black;
+      }
+
+      th {
+        background: blue;
+        color: white;
+      }
+
+      td {
+        background: orange;
+      }
+
+      td.background {
+        background: white;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script>
+      document.write("<b>Witaj JavaScript<br /><br /></b>");
+
+      let text = "";
+      for (let i = -111; i <= 111; i++) text += i.toString() + " ";
+      document.write(`<p>${text}</p><br />`);
+
+      text = "";
+      for (let i = 50; i > 0; i -= 3) text += i.toString() + " ";
+      document.write(`<p>${text}</p><br />`);
+
+      text = "";
+      for (let i = 50; i >= 10; i--) {
+        if (i <= 20 || i >= 40) text += i.toString() + " ";
+      }
+      document.write(`<p>${text}</p><br />`);
+    </script>
+
+    <!-- <script>
+      for (let i = -30; i < 40; i++) {
+        if (i % 2 == 0 && (i <= 5 || i >= 14)) console.log(i);
+      }
+      console.log("\n");
+
+      for (let i = -20; i < 40; i++) {
+        if (i % 2 != 0 && (i <= 3 || i >= 12)) console.log(i);
+      }
+      console.log("\n");
+
+      for (let i = -100; i < 41; i++) {
+        if (i % 3 == 0 && (i <= 50 || i >= 12)) console.log(i);
+      }
+      console.log("\n");
+    </script>
+
+    <script>
+      const value = parseInt(window.prompt("podaj liczbę"));
+
+      document.write(`<p >${"X".repeat(value)}</p>`);
+      document.write("<br />");
+
+      for (let i = 0; i < value; i++) {
+        if (i == 0 || i == value - 1) {
+          const text = " X".repeat(value).replace(" ", "");
+          document.write(`<p>${text}</p>`);
+        } else {
+          document.write(`<p>X${"&nbsp".repeat(value * 2 - 3)}X</p>`);
+        }
+      }
+      document.write("<br />");
+
+      for (let i = value * 2 - 1; i > 0; i -= 2) {
+        document.write(`<p>${"X".repeat(i)}</p>`);
+      }
+      document.write("<br />");
+
+      for (let i = 1; i <= value; i++) {
+        let text = "";
+        for (let j = 1; j <= i; j++) text += j.toString();
+        document.write(`<p >${text}</p>`);
+      }
+      document.write("<br />");
+
+      for (let i = value; i >= 1; i--) {
+        let text = "";
+        for (let j = value; j >= i; j--) text += j.toString();
+        document.write(`<p>${text}</p>`);
+      }
+      document.write("<br />");
+
+      function factorial(number) {
+        if (number == 1 || number == 0) return 1;
+        let result = 1;
+        for (let i = 2; i <= number; i++) result *= i;
+        return result;
+      }
+      document.write(`<p>Silnia: ${factorial(value)}</p>`);
+
+      let sum = 0;
+      for (let i = 1; i < value; i += 2) sum += i;
+      document.write(
+        `<p >Suma liczb nieparzystych dodatnich mniejszych niż podana wartość: ${sum}</p>`
+      );
+      document.write("<br />");
+
+      function prime(number) {
+        let square = Math.sqrt(number);
+        let isPrime = true;
+
+        for (let i = 2; i <= square; i++) {
+          if (number % i == 0) {
+            isPrime = false;
+            break;
+          }
+        }
+        return isPrime;
+      }
+      window.alert(`Liczba ${prime(value) ? "" : "nie "}jest pierwsza`);
+
+      let table = document.createElement("table");
+
+      for (let i = 1; i <= value; i++) {
+        const tr = table.insertRow();
+
+        for (let j = 1; j <= value; j++) {
+          const td =
+            j == 1 || i == 1
+              ? tr.appendChild(document.createElement("th"))
+              : tr.insertCell();
+
+          j == i ? td.classList.add("background") : "";
+          td.innerText = (j * i).toString();
+        }
+      }
+
+      document.getElementsByTagName("body")[0].appendChild(table);
+    </script> -->
+
+    <script>
+      const pesel = window.prompt("Podaj pesel");
+
+      let isCorrect = true;
+      let peselSum = 0;
+
+      for (let i = 1; i <= 10; i++) {
+        const ck = parseInt(pesel[i - 1]);
+
+        if ([1, 5, 9].includes(i)) peselSum += ck;
+        else if ([2, 6, 10].includes(i)) peselSum += ck * 3;
+        else if ([3, 7].includes(i)) peselSum += ck * 7;
+        else if ([4, 8].includes(i)) peselSum += ck * 9;
+      }
+
+      if (pesel.length != 11 || 10 - (peselSum % 10) != pesel[10]) {
+        console.error("niepoprawny pesel");
+      } else {
+        const gender = pesel[9] % 2 == 0 ? "female" : "male";
+        let year = pesel.slice(0, 2);
+        let month = pesel.slice(2, 4);
+        const day = pesel.slice(4, 6);
+
+        if (month[0] == 8 || month[0] == 9) {
+          year = "18" + year;
+          month -= 80;
+        } else if (month[0] == 0 || month[0] == 1) {
+          year = "19" + year;
+        } else if (month[0] == 2 || month[0] == 3) {
+          year = "20" + year;
+          month -= 20;
+        } else if (month[0] == 4 || month[0] == 5) {
+          year = "21" + year;
+          month -= 40;
+        } else if (month[0] == 6 || month[0] == 7) {
+          year = "22" + year;
+          month -= 60;
+        }
+
+        console.log(year, month, day, gender);
+      }
+    </script>
+  </body>
+</html>

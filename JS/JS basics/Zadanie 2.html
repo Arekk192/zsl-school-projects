@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        font-family: monospace;
+      }
+
+      p {
+        max-width: 100%;
+        word-break: break-all;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script>
+      // pobieranie tekstu i usuwanie znaków białych
+      let text = window.prompt("Podaj ciąg");
+      text = text.replace(/[\s\n]/g, "");
+      text = text.toUpperCase();
+
+      // wypisanie tekstu (dna)
+      document.write(`<p>${text.toLowerCase()}</p>`);
+
+      const arr = [];
+
+      // dzielenie tekstu na triplety
+      for (let i = 0; i < text.length; i += 3) arr.push(text.substr(i, 3));
+
+      // ewentualne wyrzucenie ostatniego kodonu ( x < 3 )
+      if (arr[arr.length - 1].length < 3) arr.pop();
+
+      // wypisywanie trypletów
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i] == "ATG") {
+          document.write(`${arr[i].bold().fontcolor("green")} `);
+        } else if (arr[i] == "TAA" || arr[i] == "TAG" || arr[i] == "TGA") {
+          document.write(
+            `<span style="background-color: yellow;">${arr[i]}</span> `
+          );
+        } else document.write(`${arr[i]} `);
+      }
+
+      document.write("<br />".repeat(2));
+
+      // wypisanie nici komplementarnej w całości
+
+      const getRna = () => {
+        let rna = "";
+        for (let i = 0; i < text.length; i++) {
+          switch (text[i]) {
+            case "A":
+              rna += "T";
+              break;
+            case "T":
+              rna += "A";
+              break;
+            case "C":
+              rna += "G";
+              break;
+            case "G":
+              rna += "C";
+              break;
+          }
+        }
+        return rna;
+      };
+
+      document.write(`<p>${getRna().toLowerCase()}</p>`);
+
+      // wypisanie nici komplementarnej w kodonach
+      for (let i = 0; i < arr.length; i++) {
+        const codon = [];
+        for (let j = 0; j < 3; j++) {
+          switch (arr[i][j]) {
+            case "A":
+              codon.push("T");
+              break;
+            case "T":
+              codon.push("A");
+              break;
+            case "C":
+              codon.push("G");
+              break;
+            case "G":
+              codon.push("C");
+              break;
+          }
+        }
+        document.write(`${codon.join("")} `);
+      }
+
+      // tworzenie obiektu statystyk
+      const stats = {};
+
+      for (let i = 0; i < arr.length; i++) {
+        if (!stats[arr[i]]) stats[arr[i]] = 1;
+        else stats[arr[i]]++;
+      }
+
+      // sortowanie statystyk
+      const sorted = Object.keys(stats).sort((a, b) => stats[b] - stats[a]);
+
+      // losowanie kolorów
+      const colors = [];
+      for (let i = 0; i < sorted.length; i += 5)
+        colors.push(`#${Math.floor(Math.random() * 16777215).toString(16)}`);
+
+      // wyświetlenie statystyk
+      document.write("<br />".repeat(2));
+      const style = "margin: 0; width: 100px; text-align: center;";
+
+      for (let i = 0; i < sorted.length; i++) {
+        document.write(
+          `<p style="background: ${colors[parseInt(i / 5)]}; ${style}">
+            ${sorted[i]} - ${stats[sorted[i]]}
+          </p>`
+        );
+      }
+    </script>
+  </body>
+</html>

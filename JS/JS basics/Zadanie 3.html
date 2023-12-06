@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      input {
+        width: 300px;
+      }
+
+      img {
+        width: 300px;
+      }
+
+      textarea {
+        resize: none;
+      }
+
+      #element {
+        width: 50px;
+        height: 50px;
+        background: green;
+        position: absolute;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ZADANIE 1 -->
+    <!-- <input type="text" name="" id="input" maxlength="58" />
+    <script>
+      const input = document.getElementById("input");
+      input.value = "Ciekawe czy uda ci się to zrobić" + " ".repeat(26); // 32 znaki
+      const moveText = () => {
+        const text = input.value;
+        // input.value = text[text.length - 1] + text.slice(0, text.length - 1);
+        input.value =
+          text.slice(1, text.length - 1) + text[text.length - 1] + text[0];
+
+        setTimeout(() => moveText(), 100);
+      };
+      moveText();
+    </script> -->
+
+    <!-- ZADANIE 2 -->
+    <div></div>
+    <!-- <img
+      src="interia.webp"
+      alt=""
+      id="img"
+      style="scale: 1; position: absolute; bottom: 150px"
+    />
+    <script>
+      const scaleImg = document.getElementById("img");
+      let shouldIncrease = true;
+      const setScale = () => {
+        const scale = scaleImg.style.scale;
+
+        if (scale > 3 || scale < 1) shouldIncrease = !shouldIncrease;
+
+        if (shouldIncrease) scaleImg.style.scale = scale * 1.1;
+        else scaleImg.style.scale = (scale * 10) / 11;
+
+        setTimeout(() => setScale(), 100);
+      };
+      setScale();
+    </script> -->
+
+    <!-- ZADANIE 3 -->
+    <textarea name="" id="textarea" cols="50" rows="20"></textarea>
+    <script>
+      const textarea = document.querySelector("#textarea");
+      const rows = textarea.rows;
+      const cols = textarea.cols;
+
+      const generateMarks = () => {
+        const arr = [];
+        const chars =
+          "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for (let i = 0; i < rows * cols; i++) {
+          if ([1, 2, 3, 4, 5].includes(Math.round(Math.random() * 100)))
+            arr.push(chars.charAt(Math.floor(Math.random() * chars.length)));
+          else arr.push("\xa0");
+        }
+        return arr;
+      };
+
+      const spaces = [];
+      for (let i = 0; i < 1000; i++) {
+        spaces.push("\xa0");
+      }
+
+      const animate = (arr, index) => {
+        if (index > rows * 2) {
+          const marks = generateMarks();
+          animate(marks, 0);
+        } else {
+          let newArr;
+
+          if (index <= rows) {
+            newArr = arr
+              .slice(cols * (rows - index))
+              .concat(["\xa0".repeat(cols * (rows - index))]);
+          } else if (index > rows && index <= rows * 2) {
+            newArr = ["\xa0".repeat(cols * (index - rows))].concat(
+              arr.slice(0, arr.length - cols * (index - rows))
+            );
+          }
+          textarea.value = newArr.join("");
+          index++;
+
+          setTimeout(() => animate(marks, index), 100);
+        }
+      };
+
+      const marks = generateMarks();
+      animate(marks, 0);
+    </script>
+
+    <!-- ZADANIE 4 -->
+    <!-- <div id="element"></div> -->
+
+    <!-- <script>
+      let a = 0;
+      let multiplier = 1;
+      let loopCount = 0;
+      let i = 0;
+      const img = document.querySelector("#element");
+      const R = 80;
+      const staticPosition = [250, 250];
+      const corners = [
+        [1, 1],
+        [-1, 1],
+        [-1, -1],
+        [1, -1],
+      ];
+
+      const move = () => {
+        img.style.left = `${staticPosition[0] + Math.cos(a) * R}px`;
+        img.style.top = `${staticPosition[1] + Math.sin(a) * R}px`;
+
+        if (loopCount == 1 / 0.02) {
+          loopCount = 0;
+          multiplier -= 0.5;
+
+          staticPosition[0] += R * corners[i][0];
+          staticPosition[1] += R * corners[i][1];
+
+          i == 3 ? (i = 0) : i++;
+        }
+
+        multiplier += 0.02;
+        loopCount++;
+
+        a = multiplier * Math.PI;
+      };
+
+      setInterval(move, 15);
+    </script> -->
+  </body>
+</html>
