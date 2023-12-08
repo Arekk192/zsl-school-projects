@@ -1,0 +1,47 @@
+.book {
+  width: 480px;
+  height: 80px;
+  margin: 8px auto;
+  background: whitesmoke;
+  border-radius: 8px;
+}
+
+.book > h1 {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  height: 64px;
+  padding: 12px /*auto*/ 4px;
+  color: #4b4b4b;
+  font-family: "Times New Roman", Times, serif;
+}
+
+form {
+  width: 120px;
+}
+
+select {
+  width: 100%;
+}
+
+button {
+  display: block;
+  margin: 12px auto 0;
+}
+
+.input-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: rgb(153, 153, 153);
+  border-radius: 8px;
+  margin: 8px 0;
+  height: 40px;
+}
+
+.input-option > p {
+  margin: 4px 0;
+}

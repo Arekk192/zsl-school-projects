@@ -1,0 +1,9 @@
+<form action="/handle" method="get">
+  {{#each values}}
+    <div class="input-option">
+      <p>{{this}}</p>
+      <input type="checkbox" name="{{this}}" />
+    </div>
+  {{/each}}
+  <button type="submit">submit</button>
+</form>
