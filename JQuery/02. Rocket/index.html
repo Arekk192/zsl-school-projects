@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="jquery.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      .container {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+      }
+
+      #game {
+        width: calc(100% - 200px);
+        height: 100%;
+        background: darkblue;
+      }
+
+      #menu {
+        width: 200px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      button {
+        width: 80%;
+        height: 50px;
+        margin: 4px auto;
+        background: gray;
+        border: 1px solid #777;
+        outline: none;
+        font-size: 16px;
+        font-family: monospace;
+        color: white;
+        text-transform: uppercase;
+      }
+
+      button:nth-child(1) {
+        margin: 20px auto 4px;
+      }
+
+      #rocket {
+        background: orange;
+        position: absolute;
+        z-index: 2;
+      }
+
+      .asteroid {
+        position: absolute;
+        z-index: 1;
+        background: green;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div id="game">
+        <div id="rocket"></div>
+      </div>
+      <div id="menu">
+        <button id="steps">steps</button>
+        <button id="jump">jumping</button>
+      </div>
+    </div>
+
+    <script>
+      $(document).ready(() => {
+        let index = 0;
+        let stepsIndex = 0;
+        const arr = [];
+        const rocketW = 40;
+        const rocketH = 40;
+        const rocket = $("#rocket")
+          .css("width", `${rocketW}px`)
+          .css("height", `${rocketH}px`);
+        const area = $("#game");
+        let interval;
+        let isMoving = false;
+        let vector;
+        const step = 100;
+        let moved = false;
+
+        area.on("click", (e) => {
+          const width = 50;
+          const height = 50;
+          const div = $("<div>")
+            .addClass("asteroid")
+            .css("width", `${width}px`)
+            .css("height", `${height}px`);
+
+          const position = [e.clientX - width / 2, e.clientY - height / 2];
+          area.append(
+            div
+              .css("left", `${position[0]}px`)
+              .css("top", `${position[1]}px`)
+              .text(index)
+          );
+          arr.push(position);
+          index++;
+        });
+
+        const move = () => {
+          if (arr.length > 0) {
+            rocket
+              .css("left", `${arr[stepsIndex][0] + rocketW / 8}px`)
+              .css("top", `${arr[stepsIndex][1] - rocketH / 6}px`);
+
+            if (arr.length - 1 == stepsIndex) stepsIndex = 0;
+            else stepsIndex++;
+          }
+        };
+
+        $("#steps").on("click", () => {
+          clearInterval(interval);
+          isMoving = false;
+          move();
+        });
+
+        $("#jump").on("click", () => {
+          if (!isMoving) {
+            interval = setInterval(move, 500);
+            isMoving = !isMoving;
+          } else {
+            clearInterval(interval);
+            isMoving = !isMoving;
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

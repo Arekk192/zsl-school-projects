@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="jquery.js"></script>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      #createMenu,
+      #deleteMenu,
+      #select {
+        margin: 10px 4px;
+        padding: 4px;
+      }
+
+      #createMenu {
+        margin-left: 10px;
+      }
+
+      .element {
+        width: 400px;
+        min-height: 80px;
+        background: blue;
+        margin: 10px;
+        color: white;
+        font-size: 32px;
+        position: relative;
+      }
+
+      .element > p {
+        width: 340px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        margin-left: 12px;
+      }
+
+      .element > button {
+        width: 80px;
+        height: 80px;
+        outline: none;
+        border: none;
+        position: absolute;
+        font-size: 100%;
+        color: white;
+        top: 0px;
+      }
+
+      .element > .delbtn {
+        right: 0px;
+        background: green;
+      }
+
+      .element > .addbtn {
+        right: 80px;
+        background: orange;
+      }
+
+      .child {
+        width: 320px;
+        height: 80px;
+        margin: 0 0 0 80px;
+        background: lightblue;
+        display: flex;
+        justify-content: end;
+        position: relative;
+      }
+
+      .delchildbtn {
+        width: 80px;
+        height: 80px;
+        outline: none;
+        border: none;
+        position: absolute;
+        font-size: 100%;
+        color: white;
+      }
+    </style>
+  </head>
+
+  <body>
+    <button id="createMenu">Stwórz menu</button>
+    <button id="deleteMenu">Usuń menu</button>
+    <select name="" id="select">
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+    </select>
+    <div id="container"></div>
+
+    <script>
+      $(document).ready(() => {
+        let arr = [];
+        let value = $("#select").val();
+
+        const createMenu = (amount) => {
+          for (let i = 0; i < amount; i++) {
+            const div = $("<div>").addClass("element");
+
+            $("#container").append(div);
+            div.append($("<p>").text(i));
+
+            const delButton = $("<button>").addClass("delbtn");
+            delButton.on("click", () => {
+              const del = window.confirm("czy chcesz usunac?");
+              if (del) {
+                div.remove();
+              }
+            });
+            div.append(delButton.html("x"));
+
+            const delChildButton = $("<button>").addClass("delchildbtn");
+            delChildButton.on("click", (e) => {
+              const del = window.confirm("czy chcesz usunac dziecko?");
+              if (del) {
+                child.remove();
+              }
+            });
+
+            const child = $("<div>")
+              .html("x")
+              .addClass("child")
+              .append(delChildButton);
+
+            const addButton = $("<button>").addClass("addbtn");
+            addButton.on("click", () => {
+              div.append($("<div>".html("x")));
+            });
+            div.append(addButton);
+          }
+        };
+
+        const deleteMenu = () => $("#container").empty();
+
+        $("#createMenu").on("click", () => {
+          deleteMenu();
+          createMenu(value);
+        });
+
+        $("#deleteMenu").on("click", () => deleteMenu());
+
+        $("#select").on("change", () => {
+          value = $("#select").val();
+        });
+      });
+    </script>
+  </body>
+</html>

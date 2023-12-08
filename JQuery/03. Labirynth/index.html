@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="jquery.js"></script>
+    <style>
+      #main {
+        position: relative;
+        margin-top: 100px;
+      }
+
+      .field {
+        width: 50px;
+        height: 50px;
+        background: lightblue;
+        position: absolute;
+        border: 1px solid black;
+      }
+
+      .player1 {
+        position: absolute;
+        top: -80px;
+        left: 0px;
+        z-index: 10;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: green;
+      }
+
+      .player2 {
+        top: -80px;
+        left: 100px;
+        position: absolute;
+        z-index: 10;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: blue;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="start">start game</button>
+    <button id="next">next move</button>
+    <button id="reset">reset game</button>
+    <div id="main"></div>
+
+    <script>
+      let tab = [];
+
+      function elementInArr(element, arr) {
+        for (let i = 0; i < arr.length; i++)
+          if (element.x == arr[i].x && element.y == arr[i].y) return true;
+      }
+
+      function generateMap(amount, container) {
+        for (let i = 0; i < amount; i++) {
+          for (let j = 0; j < amount; j++) {
+            const div = $("<div>")
+              .addClass("field")
+              .on("click", function () {
+                if (tab.length > 0) {
+                  const lastEl = tab[tab.length - 1];
+                  const currEl = {
+                    x: parseInt($(this).css("left").replace("px", "")),
+                    y: parseInt($(this).css("top").replace("px", "")),
+                  };
+
+                  const x =
+                    (lastEl.x == currEl.x - 50 || lastEl.x == currEl.x + 50) &&
+                    lastEl.y == currEl.y;
+                  const y =
+                    (lastEl.y == currEl.y - 50 || lastEl.y == currEl.y + 50) &&
+                    lastEl.x == currEl.x;
+
+                  if ((x || y) && !elementInArr(currEl, tab)) {
+                    tab.push({
+                      x: parseInt($(this).css("left").replace("px", "")),
+                      y: parseInt($(this).css("top").replace("px", "")),
+                    });
+                    $(this).css("background", "yellow");
+                  }
+                } else {
+                  tab.push({
+                    x: parseInt($(this).css("left").replace("px", "")),
+                    y: parseInt($(this).css("top").replace("px", "")),
+                  });
+                  $(this).css("background", "yellow");
+                }
+              });
+            const text = `${i}-${j}`;
+            const left = `${50 * i}px`;
+            const top = `${50 * j}px`;
+            container.append(div.html(text).css("left", left).css("top", top));
+          }
+        }
+      }
+
+      $(document).ready(() => {
+        const main = $("#main");
+        const player1 = $("<div>").addClass("player1");
+        const player2 = $("<div>").addClass("player2");
+
+        generateMap(8, main);
+        main.append(player1);
+        main.append(player2);
+
+        $("#start").on("click", () => {
+          player1.css("left", `${tab[0].x}px`).css("top", `${tab[0].y}px`);
+          player2
+            .css("left", `${tab[tab.length - 1].x}px`)
+            .css("top", `${tab[tab.length - 1].y}px`);
+        });
+
+        let index = 0;
+        let increasing = false;
+        $("#next").on("click", () => {
+          if (index == 0 || index == tab.length - 1) increasing = !increasing;
+          if (increasing) index++;
+          else index--;
+
+          player1
+            .css("left", `${tab[index].x}px`)
+            .css("top", `${tab[index].y}px`);
+          player2
+            .css("left", `${tab[tab.length - (index + 1)].x}px`)
+            .css("top", `${tab[tab.length - (index + 1)].y}px`);
+        });
+
+        $("#reset").on("click", () => {
+          player1.css("top", "-80px").css("left", "0px");
+          player2.css("top", "-80px").css("left", "100px");
+
+          index = 0;
+          increasing = false;
+          tab = [];
+
+          $(".field").css("background", "lightblue");
+        });
+      });
+    </script>
+  </body>
+</html>
