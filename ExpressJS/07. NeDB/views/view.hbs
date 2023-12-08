@@ -1,0 +1,27 @@
+<div class="container">
+  <form>
+    <table>
+      <tr>
+        <th>lp</th>
+        <th>name</th>
+        <th>price</th>
+      </tr>
+      {{#each values}}
+        <tr>
+          <td>{{this.index}}</td>
+          <td>{{this.name}}</td>
+          <td>{{this.price}}$</td>
+          {{!-- <td>{{this._id}}</td> --}}
+          <td>
+            <input type="checkbox" name="cb" value="{{this._id}}" />
+          </td>
+        </tr>
+      {{/each}}
+    </table>
+    <div class="buttons">
+      <button type="submit" formaction="/delete">usuń zaznaczone</button>
+      <button type="submit" formaction="/restore">przywróć dane</button>
+      <p>{{this.message}}</p>
+    </div>
+  </form>
+</div>
