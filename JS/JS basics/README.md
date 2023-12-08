@@ -122,27 +122,15 @@ A - Adenina
 # Zadanie 3
 
 <pre>
-	1. Guma (img)
-        <video width="450" height="200" controls="" style="margin-top: -24px">
-	      <source src="./video/1.mp4" type="video/mp4">
-	    </video> 
-		
-	2. Lecący tekst (input type text)
-	<video width="450" height="100" controls="">
-	  <source src="./video/2.mp4" type="video/mp4">
-	</video>  
-		
-	3. Spadające tablice znaków (w textarea)
-	<video width="450" controls="" style="margin-top: 8px">
-	  <source src="./video/spadaj.mov" type="video/mp4">
-	</video>  
-	- przestrzeń losowania: cols x rows
-	- możliwy znak do wylosowania: a-z, A-Z
-	- szansa na wylosowanie znaku na danej pozycji: 5%
-	- po spadnięciu jednego zestawu znaków losuje się kolejna tablica
-		
-	4. "Pasąca" się grafika (ruch po "koniczynie" z użyciem top/left, proszę nie używaj CSS'owej animacji)
-	<video width="450" height="400" controls="" style="margin-top: 8px">
-	  <source src="./video/koniczyna.mov" type="video/mp4">
-	</video>  
+1. Guma (img)
+
+2. Lecący tekst (input type text)
+
+3. Spadające tablice znaków (w textarea)
+- przestrzeń losowania: cols x rows
+- możliwy znak do wylosowania: a-z, A-Z
+- szansa na wylosowanie znaku na danej pozycji: 5%
+- po spadnięciu jednego zestawu znaków losuje się kolejna tablica
+	
+4. "Pasąca" się grafika (ruch po "koniczynie" z użyciem top/left, proszę nie używaj CSS'owej animacji)
 </pre>

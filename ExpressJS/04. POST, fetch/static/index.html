@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      #click {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: orange;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        font-size: 24px;
+        margin: 12px 0 0 0;
+      }
+
+      #range2Input {
+        display: block;
+        width: 320px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ZADANIE 1 -->
+    <!-- <form action="/handleForm" method="POST">
+      <input type="text" name="value1" id="" />
+      <input type="text" name="value2" id="" />
+      <select name="operation" id="">
+        <option value="+">suma</option>
+        <option value="-">różnica</option>
+        <option value="*">iloczyn</option>
+        <option value="/">iloraz</option>
+        <option value="all">wszystkie operacje</option>
+      </select>
+      <button type="submit">wyślij</button>
+    </form> -->
+
+    <!-- ZADANIE 2 -->
+    <!-- <input type="text" name="value1" id="value1Input" />
+    <input type="text" name="value2" id="value2Input" />
+    <select name="operation" id="operationInput">
+      <option value="+">suma</option>
+      <option value="-">różnica</option>
+      <option value="*">iloczyn</option>
+      <option value="/">iloraz</option>
+      <option value="all">wszystkie operacje</option>
+    </select>
+    <div id="click">klik</div>
+    <script>
+      document.querySelector("#click").addEventListener("click", () => {
+        const value1 = document.querySelector("#value1Input").value;
+        const value2 = document.querySelector("#value2Input").value;
+        const operation = document.querySelector("#operationInput").value;
+
+        const data = JSON.stringify({
+          value1: value1,
+          value2: value2,
+          operation: operation,
+        });
+
+        const options = {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: data,
+        };
+
+        fetch("/handleForm", options)
+          .then((response) => response.json())
+          .then((data) => alert(JSON.stringify(data, null, 4)))
+          .catch((error) => console.log(error));
+      });
+    </script> -->
+
+    <input type="range" name="range1" id="range1Input" />
+    <input type="range" name="range2" id="range2Input" />
+
+    <script>
+      document.querySelector("#range1Input").addEventListener("input", () => {
+        const value1 = document.querySelector("#range1Input").value;
+        const input = document.querySelector("#range2Input");
+
+        const data = JSON.stringify({ value1: value1 });
+        const options = {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: data,
+        };
+
+        fetch("/", options)
+          .then((response) => response.json())
+          .then((data) => (input.value = data.data))
+          .catch((error) => console.log(error));
+      });
+    </script>
+  </body>
+</html>
