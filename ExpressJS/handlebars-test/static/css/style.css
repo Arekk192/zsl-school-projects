@@ -1,0 +1,50 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+table {
+  margin: 20px 12px 0;
+}
+
+th {
+  padding: 0 0 8px;
+  text-transform: capitalize;
+}
+
+td:nth-child(3) {
+  width: 120px;
+  text-align: center;
+}
+
+td:nth-child(4),
+td:nth-child(5) {
+  width: 100px;
+}
+
+td:nth-child(4) > div,
+td:nth-child(5) > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 0;
+}
+
+td:nth-child(4) > div > input[type="submit"],
+td:nth-child(5) > div > input[type="submit"] {
+  text-transform: uppercase;
+}
+
+.price {
+  text-decoration: line-through;
+  color: red;
+}
+
+.discount {
+  color: green;
+}
+
+select {
+  margin: 12px 12px 8px;
+}
