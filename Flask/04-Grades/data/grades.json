@@ -1,0 +1,29 @@
+{
+  "informatyka": {
+    "term1": {
+      "answer": [
+        2, 3, 4, 4
+      ],
+      "quiz": [
+        4, 4, 5
+      ],
+      "test": [
+        4, 5, 5
+      ],
+      "interim" : 4
+    },
+    "term2": {
+      "answer": [
+        4, 4, 5, 6
+      ],
+      "quiz": [
+        4, 4, 3
+      ],
+      "test": [
+        4, 4, 6
+      ],
+      "interim": 5,
+      "yearly": 4
+    }
+  }
+}
