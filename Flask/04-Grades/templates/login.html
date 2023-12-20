@@ -12,20 +12,20 @@
         <div class="row gy-4">
             <div class="col-lg-6">
                 <div class="p-lg-5 m-lg-5 float-end">
-                    <i class="bi bi-easel2" style="font-size: 200px;"></i>
+                    <i class="bi bi-easel2" style="font-size: 240px;"></i>
                 </div>
             </div>
             <div class="col-lg-6 d-lg-flex align-items-lg-center">
                 <div style="max-width: 350px">
                     <h2 class="text-uppercase fw-bold">Logowanie</h2>
-                    <form method="POST" action="/logIn">
-                            {{ login.hidden_tag() }}
-                            {{ login.userLogin.label(class="form-label") }}
-                            {{ login.userLogin(class="form-control") }}
-                            {{ login.userPass.label(class="form-label") }}
-                            {{ login.userPass(class="form-control") }}
-                            {{ login.submit(class="btn btn-warning btn-sm mt-3 float-end") }}
-                        </form>
+                    <form method="POST" action="/login">
+                        {{ login.hidden_tag() }}
+                        {{ login.userLogin.label(class="form-label mt-3 mb-1") }}
+                        {{ login.userLogin(class="form-control") }}
+                        {{ login.userPass.label(class="form-label mt-3 mb-1") }}
+                        {{ login.userPass(class="form-control") }}
+                        {{ login.submit(class="btn btn-warning btn-sm mt-3 float-end") }}
+                    </form>
                 </div>
             </div>
         </div>
