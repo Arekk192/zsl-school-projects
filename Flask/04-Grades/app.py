@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, redirect
+from flask import Flask, render_template, session, redirect, flash
 from flask_bs4 import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, SelectField, RadioField
@@ -29,7 +29,7 @@ class Grade(FlaskForm):
     """Formularz dodawania oceny"""
     subject = SelectField('Wybierz przemiot', choices=str)
     term = RadioField('Wybierz semestr', choices=[("term1", "Semestr 1"), ("term2", "Semestr 2")])
-    category = RadioField('Kategoria oceny', choices=[('answer', 'Odpowiedź'), ('quiz', 'Kartkówka'), ('test', 'Sprawdzian')])
+    category = SelectField('Kategoria oceny', choices=[('answer', 'Odpowiedź'), ('quiz', 'Kartkówka'), ('test', 'Sprawdzian')])
     grade = SelectField('Ocena', choices=[
         (6, "Celujący"),
         (5, "Bardzo dobry"),
@@ -46,7 +46,7 @@ def countAverage(subjectValue, termValue):
         grades = json.load(gradesFile)
         gradesFile.close()
     sumGrades = 0
-    lenght = 0
+    length = 0
     if subjectValue == "" and termValue == "":
         for subject, terms in grades.items():
             for term, categories in terms.items():
@@ -54,7 +54,7 @@ def countAverage(subjectValue, termValue):
                     if category == 'answer' or category == 'quiz' or category == 'test':
                         for grade in grades:
                             sumGrades += grade
-                            lenght += 1
+                            length += 1
     else:
         for subject, terms in grades.items():
             if subject == subjectValue:
@@ -64,9 +64,12 @@ def countAverage(subjectValue, termValue):
                             if category == 'answer' or category == 'quiz' or category == 'test':
                                 for grade in grades:
                                     sumGrades += grade
-                                    lenght += 1
-    if lenght != 0:
-        return round(sumGrades / lenght, 2)
+                                    length += 1
+
+
+
+    if length != 0: return round(sumGrades / length, 2)
+    else: return 0
 
 totalAverage = {}
 def yearlyAverage(subjectValue, termValue):
@@ -104,6 +107,7 @@ def logIn():
         if userLogin == users['userLogin'] and userPass == users['userPass']:
             session['userLogin'] = userLogin
             session['firstName'] = users['firstName']
+            session['lastName'] = users['lastName']
             return redirect('dashboard')
     return render_template('login.html', title='Logowanie', login=login)
 
@@ -142,14 +146,32 @@ def addSubject():
         with open('data/grades.json', 'w', encoding='utf-8') as gradesFile:
             json.dump(grades, gradesFile)
             gradesFile.close()
+            flash(f'Dodano przedmiot {subject}', 'success')
             return redirect('dashboard')
     return render_template('add-subject.html', title="Dodaj przedmiot", subjectForm=subjectForm, userLogin=session.get(
         'userLogin'), firstName=session.get('firstName'), date=date)
 
-@app.route('/addGrade')
+@app.route('/addGrade', methods=['POST', 'GET'])
 def addGrade():
-    return render_template('add-grade.html', title="Dodaj ocenę", userLogin=session.get('userLogin'), firstName=session.get(
-        'firstName'), date=date)
+    gradeForm = Grade()
+    with open('data/grades.json') as gradesFile:
+        grades = json.load(gradesFile)
+        gradesFile.close()
+        gradeForm.subject.choices = [subject for subject in grades]
+    if gradeForm.validate_on_submit():
+        subject = gradeForm.subject.data
+        term = gradeForm.term.data
+        category = gradeForm.category.data
+        grade = gradeForm.grade.data
+        grades[subject][term][category].append(int(grade))
+        with open('data/grades.json', 'w', encoding='utf-8') as gradesFile:
+            json.dump(grades, gradesFile)
+            gradesFile.close()
+        flash(f'Dodano ocenę {grade} z przedmiotu {subject} dla ucznia {session.get("firstName")} {session.get("lastName")}', category='success')
+        return redirect('dashboard')
+
+    return render_template('add-grade.html', title="Dodaj ocenę", gradeForm=gradeForm, userLogin=session.get(
+        'userLogin'), firstName=session.get('firstName'), date=date)
 
 @app.errorhandler(404)
 def pageNotFound(error):

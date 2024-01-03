@@ -22,15 +22,30 @@
                             {% for category, grades in categories.items() %}
                                 {% if category == 'answer' %}
                                     {% for grade in grades %}
-                                        <span class="badge text-bg-danger "> {{ grade }} </span>
+                                        <span
+                                            class="badge text-bg-danger rounded-0 user-select-none"
+                                            data-bs-toggle="tooltip"
+                                            data-bs-placement="top"
+                                            title="Odpowiedź ustna"
+                                        > {{ grade }} </span>
                                     {% endfor %}
                                 {% elif category == 'quiz' %}
                                     {% for grade in grades %}
-                                        <span class="badge text-bg-warning"> {{ grade }} </span>
+                                        <span
+                                            class="badge text-bg-warning rounded-0 user-select-none"
+                                            data-bs-toggle="tooltip"
+                                            data-bs-placement="top"
+                                            title="Quiz"
+                                        > {{ grade }} </span>
                                     {% endfor %}
                                 {% elif category == 'test' %}
                                     {% for grade in grades %}
-                                        <span class="badge text-bg-secondary"> {{ grade }} </span>
+                                        <span
+                                            class="badge text-bg-secondary rounded-0 user-select-none"
+                                            data-bs-toggle="tooltip"
+                                            data-bs-placement="top"
+                                            title="Test pisemny"
+                                        > {{ grade }} </span>
                                     {% endfor %}
                                 {% endif %}
                             {% endfor %}

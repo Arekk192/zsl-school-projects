@@ -7,9 +7,14 @@
     <script src="{{ url_for('.static', filename='timeNow.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+        ${function() {
+            $('[data-bs-toggle="tooltip"]').tooltip()
+        }
+    </script>
+    <script>
         const data = {
             labels: [
-                {% for subject in grades  %}
+                {% for subject in grades %}
                     '{{ subject | title }}',
                 {% endfor %}
             ],
@@ -57,6 +62,20 @@
 {% block body_attribs %} onload="startTime()" {% endblock %}
 {% block content %}
     <div class="px-5">
+        <div class="row">
+            <div class="col-lg-12">
+                {% with messages = get_flashed_messages(with_categories=True) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+        </div>
         <div class="row my-2 mb-4">
             <div class="col-lg-1">
                 <div class="card" style="height: 150px">

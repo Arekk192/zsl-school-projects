@@ -15,7 +15,7 @@
     <div class="container" >
         <div class="row">
             <div class="col-lg-4 offset-lg-4">
-                <form method="post" action="{{ url_for("addSubject") }}">
+                <form method="post" action="{{ url_for('addSubject') }}">
                     {{ subjectForm.hidden_tag() }}
                     {{ subjectForm.subject.label(class="form-label") }}
                     {{ subjectForm.subject(class="form-control") }}
