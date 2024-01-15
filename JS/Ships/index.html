@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --border: 2px solid black;
+      }
+
+      .center {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #game {
+        position: absolute;
+        display: flex;
+        transition: 1500ms;
+      }
+
+      #game > div:nth-child(2) {
+        margin-right: 20px;
+      }
+
+      .map {
+        display: flex;
+        border: 1px solid black;
+      }
+
+      .field {
+        width: 40px;
+        height: 40px;
+        border: 1px solid black;
+      }
+
+      #ships-container {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        transition: 1000ms;
+      }
+
+      .ship-container {
+        position: absolute;
+        left: -200px;
+        display: flex;
+        border-radius: 10px;
+      }
+
+      .ship-container:not(.disabled-ship):hover {
+        background: lightgreen;
+      }
+
+      .ship-field {
+        width: 36px;
+        height: 36px;
+        border-radius: 0;
+        border-top: var(--border);
+        border-bottom: var(--border);
+        border-left: 1px solid black;
+        border-right: 1px solid black;
+      }
+
+      .ship-field:nth-child(1) {
+        border-left: var(--border);
+        border-top: var(--border);
+        border-bottom: var(--border);
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+      }
+
+      .ship-field:nth-last-child(1) {
+        border-right: var(--border);
+        border-top: var(--border);
+        border-bottom: var(--border);
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+      }
+
+      #active-ship {
+        background: green;
+      }
+
+      .disabled-ship {
+        background: lightgray;
+      }
+
+      .shooted-ship {
+        background: orange;
+      }
+
+      .shooted-field {
+        background: yellow;
+      }
+
+      #computer {
+        position: absolute;
+        top: 12px;
+        width: 200px;
+        left: calc(50% - 100px);
+        text-align: center;
+      }
+    </style>
+    <script src="index.js"></script>
+  </head>
+  <body onload="restartGame()"></body>
+</html>

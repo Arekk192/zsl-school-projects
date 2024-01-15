@@ -1,0 +1,41 @@
+{{> navbar}}
+<div class="container mt-4">
+  <form method="POST">
+    <h1 class="mt-5 mb-4 fs-1">Add new car</h1>
+    <div>
+      <div class="" style="width: 160px;">
+        <label for="insurance" class="d-flex gap-2 py-2">
+          <input
+            type="checkbox"
+            name="data"
+            id="insurance"
+            value="insuranced"
+          />
+          <p class="m-0 p-0 user-select-none">ubezpieczony</p>
+        </label>
+      </div>
+      <div class="" style="width: 160px;">
+        <label for="gasoline" class="d-flex gap-2 py-2">
+          <input type="checkbox" name="data" id="gasoline" value="gasoline" />
+          <p class="m-0 p-0 user-select-none">benzyna</p>
+        </label>
+      </div>
+      <div class="" style="width: 160px;">
+        <label for="condition" class="d-flex gap-2 py-2">
+          <input type="checkbox" name="data" id="condition" value="damaged" />
+          <p class="m-0 p-0 user-select-none">uszkodzony</p>
+        </label>
+      </div>
+      <div class="" style="width: 160px;">
+        <label for="drive" class="d-flex gap-2 py-2">
+          <input type="checkbox" name="data" id="drive" value="fourwheeled" />
+          <p class="m-0 p-0 user-select-none">napęd 4x4</p>
+        </label>
+      </div>
+    </div>
+    {{#if message}}
+      <div class="alert alert-success mt-3 mb-0">{{message}}</div>
+    {{/if}}
+    <input class="btn btn-dark mt-4" type="submit" value="add" />
+  </form>
+</div>

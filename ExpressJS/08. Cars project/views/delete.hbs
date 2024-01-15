@@ -1,0 +1,46 @@
+{{> navbar}}
+<div class="container mt-4">
+  <form method="POST" id="form">
+    <h1 class="mt-5 mb-4 fs-1">Delete car page</h1>
+    <div class="mb-3 d-flex gap-2">
+      <button
+        class="btn btn-danger text-uppercase"
+        type="button"
+        onclick=" if (confirm('czy na pewno chcesz usunąć zawartość bazy danych?')) {
+                    document.getElementById('form').action = 'deletecars'; 
+                    document.getElementById('form').submit(); }"
+      >delete all cars</button>
+      <button
+        class="btn btn-dark text-uppercase"
+        type="submit"
+        formaction="/deleteselected"
+      >delete selected</button>
+    </div>
+    {{#if removed}}
+      <div class="alert alert-danger" role="alert">{{removed}}</div>
+    {{/if}}
+    <table class="table">
+      {{> thead}}
+      <tbody>
+        {{#each data}}
+          <tr>
+            {{> tbody}}
+            <td>
+              <button
+                class="btn btn-danger text-uppercase"
+                formaction="/deletecar"
+                name="id"
+                value="{{_id}}"
+              >delete</button>
+            </td>
+            <td>
+              <div class="d-flex align-items-center" style="height: 38px;">
+                <input type="checkbox" name="delete" value="{{_id}}" id="" />
+              </div>
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </form>
+</div>

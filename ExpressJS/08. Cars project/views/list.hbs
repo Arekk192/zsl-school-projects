@@ -1,0 +1,20 @@
+{{> navbar}}
+<div class="container mt-4">
+  <h1 class="mt-5 mb-4 fs-1">List car page</h1>
+  <table class="table">
+    {{> thead}}
+    <tbody>
+      {{#each data}}
+      <tr>
+        {{> tbody}}
+        <td>
+          <button
+            class="btn btn-dark text-uppercase"
+            onclick="alert('id: {{_id}}\nubezpieczony: {{insuranced}}\nbenzyna: {{gasoline}}\nuszkodzony: {{damaged}}\nnaped 4x4: {{fourwheeled}}')"
+          > info </button>
+        </td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+</div>
