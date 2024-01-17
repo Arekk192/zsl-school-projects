@@ -1,0 +1,36 @@
+{{> navbar}}
+<div class="manager-container">
+  <aside>
+    <p>filemanager</p>
+    <a href="/deleteall">delete all</a>
+   </aside>
+  <div class="content">
+    <table>
+      <thead>
+        <tr>
+          <th>id</th>
+          <th>obraz</th>
+          <th>name</th>
+          <th>size</th>
+          <th>type</th>
+          <th colspan="4"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each files}}
+          <tr>
+            <td>{{this.id}}</td>
+            <td><img src="{{getIcon this.type}}" alt="file icon"></td>
+            <td>{{this.name}}</td>
+            <td>{{this.size}}</td>
+            <td>{{this.type}}</td>
+            <td><a href="show?id={{this.id}}">show</a></td>
+            <td><a href="/info?id={{this.id}}">info</a></td>
+            <td><a href="/download?id={{this.id}}">download</a></td>
+            <td><a href="/delete?id={{this.id}}">delete</a></td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</div>

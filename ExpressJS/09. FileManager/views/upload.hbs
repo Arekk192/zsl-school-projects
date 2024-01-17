@@ -1,0 +1,17 @@
+{{> navbar}}
+<div class="upload-container">
+  <aside>
+    <p>multiupload</p>
+  </aside>
+  <div class="content">
+    <form 
+      enctype="multipart/form-data" 
+      method="POST" 
+      action="/"
+    >
+      <input type="file" multiple required accept="image/*" name="data">
+      <input type="submit" value="prześlij">
+    </form>
+    <p class="message">{{message}}</p>
+  </div>
+</div>

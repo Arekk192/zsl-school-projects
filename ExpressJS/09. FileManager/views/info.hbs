@@ -1,0 +1,20 @@
+{{>navbar}}
+<div class="info-container">
+  {{#if file.id}}
+    <aside>
+      <p>file info</p>
+    </aside>
+    <div class="content">
+      <p><span>id:</span> {{file.id}}</p>
+      <p><span>name:</span> {{file.name}}</p>
+      <p><span>path:</span> {{file.path}}</p>
+      <p><span>size:</span> {{file.size}}</p>
+      <p><span>type:</span> {{file.type}}</p>
+      <p><span>savedate:</span> {{file.savedate}}</p>
+    </div>
+  {{else}}
+    <aside>
+      <p>Author: Arkadiusz Skupień</p>
+    </aside>
+  {{/if}}
+</div>
