@@ -1,0 +1,44 @@
+{% extends "bootstrap/base.html" %}
+{% block scripts %}
+    {{ super() }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+{% endblock %}
+{% block title %}{{ title }}{% endblock %}
+{% block navbar %}
+    {% if userLogin %}
+        {% include "includes/navbar-login.html" %}
+    {% else %}
+        {% include "includes/navbar.html" %}
+    {%  endif %}
+{% endblock %}
+{% block content %}
+    <div class="container" >
+        <div class="row">
+            <div class="col-lg-4 offset-lg-4">
+                <form method="post" action="{{ url_for('addGrade') }}">
+                    {{ gradeForm.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ gradeForm.subject.label(class="form-label") }}
+                        {{ gradeForm.subject(class="form-control") }}
+                    </div>
+                    <div class="form-check form-check-inline">
+                        {{ gradeForm.term.label(class="form-label pe-3") }}
+                        {% for term in gradeForm.term %}
+                            {{ term }}
+                            {{ term.label(class="pe-3") }}
+                        {% endfor %}
+                    </div>
+                    <div class="mb-3">
+                        {{ gradeForm.category.label(class="form-label") }}
+                        {{ gradeForm.category(class="form-control") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ gradeForm.grade.label(class="form-label") }}
+                        {{ gradeForm.grade(class="form-control") }}
+                    </div>
+                    {{ gradeForm.submit(class="btn btn-outline-primary btn-sm mt-3 float-end") }}
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
