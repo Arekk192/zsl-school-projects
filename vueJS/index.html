@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      fetch("/files", { method: "GET" })
+        .then((res) => res.json())
+        .then((root) => {
+          console.log(root);
+          root.forEach((dir) => {
+            const container = document.createElement("div");
+            container.className = "directory-container";
+
+            const h = document.createElement("h1");
+            h.textContent = dir.name;
+
+            const filesContainer = document.createElement("div");
+            filesContainer.className = "files-container";
+
+            dir.files.forEach((fileName) => {
+              const a = document.createElement("a");
+              a.textContent = fileName;
+              a.href = `/${dir.name}/${fileName}`;
+              filesContainer.append(a);
+            });
+
+            container.append(h);
+            container.append(filesContainer);
+            document.body.append(container);
+          });
+        })
+        .catch((error) => console.log(error));
+    </script>
+  </body>
+</html>

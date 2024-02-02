@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      .center {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .container {
+        display: flex;
+        gap: 8px;
+      }
+
+      .child-component {
+        padding: 4px;
+        margin: 12px 0 0;
+        border-radius: 8px;
+        border: 1px solid black;
+        user-select: none;
+      }
+
+      .send {
+        padding: 2px;
+        background: lightsalmon;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <test-component></test-component>
+    </div>
+    <template id="template-component">
+      <h1>template</h1>
+    </template>
+    <script>
+      const app = Vue.createApp({
+        data() {
+          return {};
+        },
+        components: { "test-component": { template: "#template-component" } },
+      }).mount("#app");
+    </script>
+  </body>
+</html>

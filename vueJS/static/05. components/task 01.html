@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      #app {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+      }
+
+      .business-card {
+        padding: 12px;
+        border-radius: 15px;
+        border: 2px dashed white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: animation 400ms infinite ease-in-out;
+      }
+
+      @keyframes animation {
+        0% {
+          background: green;
+        }
+        50% {
+          background: lightgreen;
+        }
+        100% {
+          background: green;
+        }
+      }
+
+      .business-card-data {
+        display: flex;
+      }
+
+      p {
+        text-transform: capitalize;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <business-card
+        name="Jan"
+        surname="Nowak"
+        age="30"
+        job="informatyk"
+      ></business-card>
+      <business-card
+        name="Michał"
+        surname="Kowalski"
+        age="23"
+        job="kucharz"
+      ></business-card>
+      <business-card
+        name="Kacper"
+        surname="Nowicki"
+        age="31"
+        job=""
+      ></business-card>
+    </div>
+    <script>
+      const BusinessCard = {
+        template: `
+            <div class="business-card">
+                <div>
+                    <div class="business-card-data">
+                        <p>imię:&nbsp;</p>
+                        <p> {{ this.name }}</p>
+                    </div>
+                    <div class="business-card-data">
+                        <p>nazwisko:&nbsp;</p>
+                        <p>{{ this.surname }}</p>
+                    </div>
+                    <div class="business-card-data">
+                        <p>wiek:&nbsp;</p>
+                        <p> {{ this.age }}</p>
+                    </div>
+                    <div class="business-card-data">
+                        <p>zawód:&nbsp;</p>
+                        <p> {{ this.job }}</p>
+                    </div>    
+                <pre>{{JSON.stringify(this, null, 2)}}</pre>
+                </div>
+            </div>
+        `,
+        props: ["name", "surname", "age", "job"],
+      };
+
+      const app = Vue.createApp({
+        data() {
+          return {};
+        },
+        methods: {},
+        components: { "business-card": BusinessCard },
+      }).mount("#app");
+    </script>
+  </body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <table>
+        <tr v-for="product in products">
+          <td>{{product.id}}</td>
+          <td>{{product.name}}</td>
+          <td>{{product.price}}</td>
+          <td>
+            <button @click="changeState(product.id)">
+              <span v-if="!cart.includes(product.id)">dodaj do koszyka</span>
+              <span v-else="!cart.includes(product.id)">w koszyku</span>
+            </button>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <script>
+      const app = Vue.createApp({
+        data() {
+          return {
+            products: [
+              { id: 1, name: "książka", price: 100 },
+              { id: 2, name: "płyta CD", price: 200 },
+              { id: 3, name: "mleko", price: 300 },
+              { id: 4, name: "buty", price: 400 },
+            ],
+            cart: [],
+          };
+        },
+        methods: {
+          changeState(id) {
+            if (!this.cart.includes(id)) this.cart.push(id);
+            else this.cart = this.cart.filter((el) => el != id);
+          },
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>

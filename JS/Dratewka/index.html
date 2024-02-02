@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="index.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      @font-face {
+        font-family: font;
+        src: url("./Dratewka/fonts/PressStart2P.ttf");
+      }
+
+      #game {
+        width: 100%;
+        height: 100vh;
+        background: green;
+        padding: 12px;
+      }
+
+      /* .message-container {
+        margin: 0 0 12px;
+      } */
+
+      .message-container > p#message {
+        font-family: font;
+      }
+
+      .data-container {
+        margin: 12px 0 24px;
+      }
+
+      .data-container > img {
+        width: 600px;
+        margin: 0 0 12px;
+        background: lightgreen;
+      }
+
+      .data-container > p {
+        font-family: font;
+      }
+
+      .input-container {
+        display: flex;
+      }
+
+      .input-container > p {
+        font-family: font;
+      }
+
+      #input {
+        font-family: font;
+        outline: none;
+        border: none;
+        background: none;
+      }
+    </style>
+  </head>
+  <body onload="setFocusOnInput()">
+    <div id="game" onclick="setFocusOnInput()">
+      <div class="message-container">
+        <p id="message">ssssss</p>
+      </div>
+      <div class="data-container">
+        <img src="./Dratewka/img/12.gif" alt="" draggable="false" />
+        <p>You can go we <span id="directions"></span></p>
+        <p>You see <span id="items"></span></p>
+        <p>You are carrying <span id="equipment"></span></p>
+      </div>
+      <div class="input-container">
+        <p>what now?&nbsp;</p>
+        <input type="text" id="input" />
+      </div>
+      <div id="message"></div>
+    </div>
+  </body>
+</html>

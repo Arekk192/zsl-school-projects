@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      .center {
+        width: 100%;
+        height: 100vh;
+      }
+
+      form {
+        display: flex;
+        gap: 12px;
+      }
+
+      .row > p {
+        margin: 4px 0 8px;
+      }
+
+      label {
+        display: flex;
+        gap: 4px;
+      }
+
+      .row:nth-child(2) > label > p {
+        text-transform: capitalize;
+      }
+
+      .row:nth-child(3) > label {
+        padding: 4px 0;
+      }
+
+      label > p {
+        user-select: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div class="center">
+        <form action="">
+          <div class="row">
+            <p>Akcesoria</p>
+            <label for="mouse">
+              <input type="checkbox" name="item" id="mouse" />
+              <p>Myszka</p>
+            </label>
+            <label for="laptop">
+              <input type="checkbox" name="item" id="laptop" />
+              <p>Laptop</p>
+            </label>
+            <label for="pc">
+              <input type="checkbox" name="item" id="pc" />
+              <p>Komputer stacjonarny</p>
+            </label>
+          </div>
+          <div class="row">
+            <p>Forma odbioru</p>
+            <label for="delivery">
+              <input type="radio" name="delivery" id="delivery" />
+              <p>kurier</p>
+            </label>
+            <label for="post">
+              <input type="radio" name="delivery" id="post" />
+              <p>poczta</p>
+            </label>
+            <label for="personal">
+              <input type="radio" name="delivery" id="personal" />
+              <p>osobiście</p>
+            </label>
+          </div>
+          <div class="row">
+            <p>Potwierdzenie</p>
+            <div class="item">
+              <label for="confirmation">
+                <input type="checkbox" name="" id="confirmation" />
+                <p>
+                  Potwierdzam zgodność danych podanych w formularzu kontaktowym
+                </p>
+              </label>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script>
+      const app = Vue.createApp({
+        data() {
+          return {
+            submit: false,
+          };
+        },
+        methods: {
+          disableSubmit() {
+            this.submit = false;
+          },
+          enableSubmit() {
+            this.submit = true;
+          },
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>

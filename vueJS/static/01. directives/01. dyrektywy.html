@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+      .note {
+        font-size: 11px;
+        color: #424242;
+        margin: -14px 0 0 0;
+        position: absolute;
+      }
+
+      p {
+        margin: 32px 0;
+      }
+
+      h5 {
+        margin: 32px 0 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <p class="note">variable</p>
+      <p>{{ title }}</p>
+
+      <p class="note">static element v-once</p>
+      <p v-once>{{ title }}</p>
+
+      <p class="note">rendering html v-html</p>
+      <p v-html="html">{{ html }}</p>
+
+      <p class="note">dynamic attributes</p>
+      <a :href="href">znacznik a</a>
+
+      <h5>Komunikat z pola txt: {{ message }}</h5>
+      <input v-model="message" type="text" />
+
+      <h5>Wybrane z selecta: {{ selected }}</h5>
+      <select v-model="selected">
+        <option>option 1</option>
+        <option>option 2</option>
+        <option>option 3</option>
+      </select>
+    </div>
+
+    <script>
+      const app = Vue.createApp({
+        data() {
+          return {
+            title: "title",
+            html: "znacznik <b>html</b>",
+            href: "#href",
+            message: "",
+            selected: "",
+          };
+        },
+      }).mount("#app");
+      app.title += " of film";
+    </script>
+  </body>
+</html>

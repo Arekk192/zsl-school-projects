@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      #app {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 0 0;
+      }
+
+      button {
+        background: #001800;
+        outline: none;
+        border: none;
+        border-radius: 4px;
+        padding: 8px 6px;
+        color: #9c9c9c;
+      }
+
+      .container {
+        width: 100%;
+        margin: 12px 0;
+        gap: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .child-component {
+        background: #001800;
+        color: #9c9c9c;
+        border-radius: 12px;
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <button @click="onClick">increments values by 1</button>
+      <div class="container">
+        <component v-bind:app-value="value"></component>
+        <component v-bind:app-value="value"></component>
+        <component v-bind:app-value="value"></component>
+      </div>
+    </div>
+    <script>
+      const Component = {
+        template: `
+            <div class="child-component">
+                <p>child</p>
+                <p> {{ this.appValue }}</p>
+            </div>
+        `,
+        props: ["appValue"],
+      };
+
+      const app = Vue.createApp({
+        data() {
+          return { value: 100 };
+        },
+        methods: {
+          onClick() {
+            this.value += 1;
+          },
+        },
+        components: { component: Component },
+      }).mount("#app");
+    </script>
+  </body>
+</html>

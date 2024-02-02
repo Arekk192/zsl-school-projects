@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      .container {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .row {
+        width: 80vw;
+        max-width: 800px;
+        height: 100%;
+        max-height: 320px;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .column {
+        width: calc(50% - 8px);
+        height: 100%;
+      }
+
+      .note {
+        font-size: 11px;
+        color: #424242;
+        margin: -14px 0 0 0;
+        position: absolute;
+      }
+
+      h1 {
+        font-size: 16px;
+        text-decoration: underline;
+        margin: 0 0 8px;
+      }
+
+      .element {
+        margin: 0 0 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div class="container">
+        <div class="row">
+          <div class="column">
+            <div class="element">
+              <h1>cw 01 - div on click</h1>
+              <div style="user-select: none" @click="onClick">CLICK ME!</div>
+            </div>
+            <div class="element">
+              <h1>cw 02 - select</h1>
+              <div style="display: flex; gap: 8px">
+                <select @change="onSelect">
+                  <option value="">[select]</option>
+                  <option value="option 1">option 1</option>
+                  <option value="option 2">option 2</option>
+                  <option value="option 3">option 3</option>
+                </select>
+                <p>{{select}}</p>
+              </div>
+            </div>
+            <div class="element">
+              <h1>cw 03 - value from input range</h1>
+              <div style="display: flex; gap: 8px">
+                <input type="range" @input="onInput" />
+                <p>{{input}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="element">
+              <h1>cw 04 - value from input checkbox</h1>
+              <div style="display: flex; gap: 8px">
+                <input type="checkbox" @input="onCheckbox" />
+                <p>{{checkbox}}</p>
+              </div>
+            </div>
+            <div class="element">
+              <h1>cw 05 - button click</h1>
+              <div style="display: flex; gap: 8px">
+                <button @click="increaseCounter">
+                  button 1 - increase counter
+                </button>
+                <p>{{count}}</p>
+              </div>
+            </div>
+            <div class="element">
+              <h1>cw 06 - button click</h1>
+              <div style="display: flex; gap: 8px">
+                <button @click="increasePower">button 2 - power</button>
+                <p>{{power}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const app = Vue.createApp({
+        data() {
+          return {
+            select: "",
+            input: 50,
+            checkbox: false,
+            count: 0,
+            power: 1,
+          };
+        },
+
+        methods: {
+          onClick() {
+            alert("on click");
+          },
+          onSelect(e) {
+            this.select = e.target.value;
+          },
+          onInput(e) {
+            this.input = e.target.value;
+          },
+          onCheckbox(e) {
+            this.checkbox = e.target.checked;
+          },
+          increaseCounter() {
+            this.count++;
+          },
+          increasePower() {
+            this.power = Math.pow(2, this.count);
+          },
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>

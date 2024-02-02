@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      .element {
+        height: 32px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .element > input {
+        width: 20px;
+        height: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div v-for="item, i in array" class="element">
+        <p v-bind:style="setStyle(item.checked)">{{item.name}}</p>
+        <input @click="switchItem(i)" type="checkbox" />
+      </div>
+      <div>
+        <input
+          @input="(e) => setInputText(e.target.value)"
+          v-bind:value="inputText"
+          style="margin: 0 6px 0 0"
+          type="text"
+        />
+        <input @click="onSubmit()" type="submit" value="dodaj" />
+      </div>
+    </div>
+
+    <script>
+      const app = Vue.createApp({
+        data() {
+          return {
+            array: [
+              { name: "element 1", checked: false },
+              { name: "element 2", checked: false },
+              { name: "element 3", checked: false },
+            ],
+            inputText: "",
+          };
+        },
+        methods: {
+          switchItem(index) {
+            const el = this.array[index];
+            this.array[index] = { name: el.name, checked: !el.checked };
+          },
+          addItem(name) {
+            this.array.push({ name: name, checked: false });
+          },
+          setStyle(enabled) {
+            if (enabled) return "color: red; font-size: 24px;";
+            else return "color: black; font-size: 16px;";
+          },
+          setInputText(text) {
+            this.inputText = text;
+          },
+          onSubmit() {
+            if (this.inputText)
+              this.array.push({ name: this.inputText, checked: false });
+            this.inputText = "";
+          },
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>

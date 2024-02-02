@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div v-for="car in cars" v-bind:style="setStyle(car.year)">
+        <p>{{setName(car.name, car.year)}}</p>
+      </div>
+    </div>
+
+    <script>
+      const app = Vue.createApp({
+        data() {
+          return {
+            cars: [
+              { id: 1, name: "Mercedes Benz", year: 1963 },
+              { id: 2, name: "Opel Corsa", year: 2010 },
+              { id: 3, name: "Mercedes Benz", year: 2008 },
+              { id: 4, name: "Peugeot 308", year: 2002 },
+              { id: 5, name: "Opel Corsa", year: 2002 },
+            ],
+          };
+        },
+        methods: {
+          setStyle(year) {
+            if (year >= 2000) return "background: green;";
+            else return "background: gray;";
+          },
+          setName(name, year) {
+            return `${name.replace(" ", "-")}-${year}`;
+          },
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>

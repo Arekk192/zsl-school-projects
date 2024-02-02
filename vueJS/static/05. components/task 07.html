@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      .child-component {
+        padding: 4px;
+        margin: 12px 0 0;
+        background: orange;
+        border-radius: 8px;
+        border: 1px solid black;
+        width: 128px;
+        user-select: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div>
+        <div>value in parent: {{value}}</div>
+        <child
+          v-for="item in items"
+          v-bind:increment-value="item.value"
+          :func="onClick"
+        >
+        </child>
+      </div>
+    </div>
+    <script>
+      const Child = {
+        template: `
+        <div 
+          class="child-component"
+          @click="onClickChild(incrementValue)"
+        >
+          send {{incrementValue}} to parent
+        </div>
+        `,
+        props: ["incrementValue", "func"],
+        methods: {
+          onClickChild(value) {
+            this.func(value);
+          },
+        },
+      };
+
+      const app = Vue.createApp({
+        data() {
+          return {
+            value: 0,
+            items: [
+              { id: 1, value: 111 },
+              { id: 2, value: 222 },
+              { id: 3, value: 333 },
+            ],
+          };
+        },
+        methods: {
+          onClick(value) {
+            this.value += value;
+          },
+        },
+        components: { child: Child },
+      }).mount("#app");
+    </script>
+  </body>
+</html>

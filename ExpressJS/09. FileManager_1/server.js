@@ -18,10 +18,13 @@ app.post("/", (req, res) => {
   form.parse(req, function (err, fields, files) {
     let message = "";
     if (Array.isArray(files.data)) {
-      const filesArrayLength = filesArray.length;
+      const startIndex = filesArray[0]
+        ? filesArray[filesArray.length - 1].id + 1
+        : 1;
+
       files.data.forEach((file, i) => {
         filesArray.push({
-          id: filesArrayLength + i + 1,
+          id: startIndex + i,
           name: file.name,
           path: file.path,
           size: file.size,
@@ -34,7 +37,7 @@ app.post("/", (req, res) => {
       }`;
     } else {
       filesArray.push({
-        id: filesArray.length + 1,
+        id: filesArray[0] ? filesArray[filesArray.length - 1].id + 1 : 1,
         name: files.data.name,
         path: files.data.path,
         size: files.data.size,
@@ -53,7 +56,11 @@ app.get("/filemanager", (req, res) => {
 
 app.get("/show", (req, res) => {
   const id = req.query.id;
-  if (filesArray[id - 1]) res.sendFile(filesArray[id - 1].path);
+  let file;
+  filesArray.forEach((el) => {
+    if (el.id == id) file = el;
+  });
+  if (file) res.sendFile(file.path);
   else res.send("brak podanego pliku");
 });
 
