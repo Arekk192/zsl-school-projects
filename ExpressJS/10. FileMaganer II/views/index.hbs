@@ -1,0 +1,89 @@
+{{> navbar}}
+<div class="upload-container">
+  <aside>
+    <div
+      onclick="document.getElementById('new-dir').showModal()"
+      class="upload-button"
+    >
+      <p>nowy folder</p>
+    </div>
+    <div
+      onclick="document.getElementById('new-file').showModal()"
+      class="upload-button"
+    >
+      <p>nowy plik tekstowy</p>
+    </div>
+    <div class="upload-button">
+      <form enctype="multipart/form-data" method="POST" action="/">
+        <label for="input-file">
+          <img src="./gfx/upload_icon.svg" alt="" />
+        </label>
+        <p>[wybierz...]</p>
+        <label for="input-submit"><p>ok</p></label>
+        <input
+          type="file"
+          multiple
+          required
+          accept="image/*"
+          name="data"
+          id="input-file"
+        />
+        <input type="submit" value="prześlij" id="input-submit" />
+      </form>
+      <dialog id="new-file">
+        <form action="/new-text-file" method="get">
+          <div class="dialog-container">
+            <p>nazwa nowego pliku w <span>/</span></p>
+            <input type="text" name="filename" id="" />
+          </div>
+          <div class="buttons-container">
+            <input type="submit" value="ok" />
+            <div
+              onclick="document.getElementById('new-file').close()"
+            >cancel</div>
+          </div>
+        </form>
+      </dialog>
+      <dialog id="new-dir">
+        <form action="/new-directory" method="get">
+          <div class="dialog-container">
+            <p>nazwa nowego katalogu w <span>/</span></p>
+            <input type="text" name="dirname" id="" />
+          </div>
+          <div class="buttons-container">
+            <input type="submit" value="ok" />
+            <div
+              onclick="document.getElementById('new-dir').close()"
+            >cancel</div>
+          </div>
+        </form>
+      </dialog>
+    </div>
+    <p class="message">{{message}}</p>
+  </aside>
+  <div class="content">
+    <div class="directories">
+      {{#each dirs}}
+        <div>
+          <div class="data">
+            <img src="./gfx/directory_icon.png" draggable="false" />
+            <p>{{this.name}}</p>
+          </div>
+          <input type="hidden" name="dirname" value="{{this.name}}">
+          <a href="/delete-directory?dirname={{this.name}}">usuń</a>
+        </div>
+      {{/each}}
+    </div>
+    <div class="files">
+      {{#each files}}
+        <div>
+          <div class="data">
+            <img src="{{this.icon}}" draggable="false" />
+            <p>{{this.name}}</p>
+          </div>
+          <a href="/delete-file?filename={{this.name}}">usuń</a>
+        </div>
+      {{/each}}
+    </div>
+  </div>
+</div>
