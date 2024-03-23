@@ -1,0 +1,124 @@
+{{> navbar}}
+<div class="upload-container">
+  <aside>
+    <div
+      onclick="document.getElementById('new-dir').showModal()"
+      class="upload-button"
+    >
+      <p>nowy folder</p>
+    </div>
+    <div
+      onclick="document.getElementById('new-file').showModal()"
+      class="upload-button"
+    >
+      <p>nowy plik tekstowy</p>
+    </div>
+    {{#unless (isHome currDir )}}
+    <div
+      onclick="document.getElementById('rename-dir').showModal()"
+      class="upload-button"
+    >
+      <p>zmiana nazwy katalogu</p>
+    </div>
+    {{/unless}} 
+    <div class="upload-button">
+      <form enctype="multipart/form-data" method="POST" action="/filemanager">
+        <label for="input-file"><img src="./gfx/upload_icon.svg" /></label>
+        <p>[wybierz...]</p>
+        <label for="input-submit"><p>ok</p></label>
+        <input
+          type="file"
+          multiple
+          required
+          accept="image/*"
+          name="data"
+          id="input-file"
+        />
+        <input type="hidden" name="mainpath" value="ss" />
+        <input type="submit" value="prześlij" id="input-submit" />
+      </form>
+    </div>
+    <dialog id="new-file">
+      <form action="/new-text-file" method="get">
+        <div class="dialog-container">
+          <p>nazwa nowego pliku w <span>{{getPath currDir}}</span></p>
+          <input type="hidden" name="root" value="{{getPath currDir}}" />
+          <input type="text" name="filename" />
+        </div>
+        <div class="buttons-container">
+          <input type="submit" value="ok" />
+          <div
+            onclick="document.getElementById('new-file').close()"
+          >cancel</div>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="new-dir">
+      <form action="/new-directory" method="get">
+        <div class="dialog-container">
+          <p>nazwa nowego katalogu w <span>{{getPath currDir}}</span></p>
+          <input type="hidden" name="root" value="{{getPath currDir}}" />
+          <input type="text" name="dirname" />
+        </div>
+        <div class="buttons-container">
+          <input type="submit" value="ok" />
+          <div onclick="document.getElementById('new-dir').close()">cancel</div>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="rename-dir">
+      <form action="/rename-directory" method="get">
+        <div class="dialog-container">
+          <p>nowa nazwa katalogu <span>{{getPath currDir}}</span></p>
+          <input type="hidden" name="path" value="{{getPath currDir}}" />
+          <input type="text" name="name" />
+        </div>
+        <div class="buttons-container">
+          <input type="submit" value="ok" />
+          <div
+            onclick="document.getElementById('rename-dir').close()"
+          >cancel</div>
+        </div>
+      </form>
+    </dialog>
+    <p class="message">{{message}}</p>
+  </aside>
+  <div class="content">
+    <div class="menu">
+      {{#each paths}}
+        {{#with this}}
+          <a href="/filemanager?name={{path}}">{{name}}</a>
+          {{#unless (isLast @index ../paths.length)}}&nbsp;&gt;&gt;&nbsp;{{/unless}} 
+        {{/with}}
+      {{/each}}
+    </div>
+    <div class="directories">
+      {{#each dirs}}
+        {{#with this}}
+          <div>
+            <div class="data">
+              <img src="./gfx/directory_icon.png" draggable="false" />
+              <p>{{name}}</p>
+            </div>
+            <input type="hidden" name="dirname" value="{{name}}" />
+            <a href="/filemanager?name={{path}}">otwórz</a>
+            <a href="/delete-directory?root={{root}}&dirname={{name}}">usuń</a>
+          </div>
+        {{/with}}
+      {{/each}}
+    </div>
+    <div class="files">
+      {{#each files}}
+        {{#with this}}
+          <div>
+            <div class="data">
+              <img src="{{icon}}" draggable="false" />
+              <p>{{name}}</p>
+            </div>
+            <a href="/delete-file?root={{root}}&filename={{name}}">usuń</a>
+          </div>
+        {{/with}}
+      {{/each}}
+    </div>
+  </div>
+</div>

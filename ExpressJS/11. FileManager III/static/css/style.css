@@ -1,0 +1,451 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --navbar-height: 80px;
+  --upload-aside-width: 280px;
+  --color-darkblue: #3c3ba1;
+  --color-lightblue: #2e9fe6;
+  --color-lightgray: #e4e4e4;
+  --color-darkgray: #898989;
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+aside {
+  width: var(--upload-aside-width);
+  height: 100%;
+  background: var(--color-lightgray);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 0;
+}
+
+.upload-container > .content {
+  width: calc(100% - var(--upload-aside-width));
+  height: 100%;
+  background: var(--color-white);
+  padding: 24px 12px;
+  overflow: scroll;
+}
+
+.upload-container {
+  width: 100%;
+  height: calc(100vh - var(--navbar-height));
+  display: flex;
+}
+
+a {
+  text-decoration: none;
+}
+
+p,
+div,
+a,
+input {
+  font-family: var(--font-family);
+}
+
+p,
+a {
+  user-select: none;
+}
+
+/* #region navbar */
+nav {
+  width: 100%;
+  height: var(--navbar-height);
+  background: var(--color-darkblue);
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 12px;
+  padding: 0 32px;
+}
+
+.navbar-item {
+  padding: 12px;
+  border-radius: 4px;
+  height: 48px;
+  transition: 450ms ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.navbar-item:not(:hover) {
+  background: var(--color-darkblue);
+}
+
+.navbar-item:not(:hover) > a {
+  color: var(--color-white);
+}
+
+.navbar-item:hover > a {
+  color: var(--color-lightblue);
+}
+
+.navbar-item > a {
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: 450ms ease-in-out;
+  user-select: none;
+}
+/* #endregion */
+
+/* #region upload */
+.upload-container > aside {
+  gap: 12px;
+}
+
+.upload-container > aside > .upload-button {
+  width: 220px;
+  height: 56px;
+  background: var(--color-lightblue);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.upload-container > aside > .upload-button:nth-child(3) {
+  cursor: auto;
+}
+
+.upload-container > aside > .upload-button > form {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.upload-container > aside > .upload-button > p {
+  color: var(--color-white);
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+
+/* .upload-container > aside > .upload-button > form > input {
+  display: block;
+} */
+
+.upload-container > aside > .upload-button > form > input[type="file"],
+.upload-container > aside > .upload-button > form > input[type="submit"] {
+  display: none;
+}
+
+.upload-container > aside > .upload-button > form > label {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.upload-container > aside > .upload-button > form > label > p {
+  color: var(--color-white);
+  font-weight: bold;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.upload-container > aside > .upload-button > form > label {
+  background: var(--color-darkblue);
+}
+
+.upload-container > aside > .upload-button > form > label > img {
+  width: 75%;
+  aspect-ratio: 1;
+}
+
+.upload-container > aside > p.message {
+  color: var(--color-darkgray);
+  margin: 8px 0 0;
+  font-size: 14px;
+}
+
+/* .upload-container > .content > .menu {} */
+
+.upload-container > .content > .directories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 16px 0 0;
+}
+
+.upload-container > .content > .directories > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  background: var(--color-lightgray);
+  min-width: 160px;
+  height: 160px;
+  border-radius: 4px;
+  padding: 8px 12px;
+}
+
+.upload-container > .content > .directories > div > .data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.upload-container > .content > .directories > div > .data > p {
+  text-align: center;
+}
+
+.upload-container > .content > .directories > div > .data > img {
+  width: 64px;
+  height: 64px;
+}
+
+.upload-container > .content > .directories > div > a {
+  padding: 1px 2px;
+  color: var(--color-darkblue);
+}
+
+.upload-container > .content > .files {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 24px 0 0;
+}
+
+.upload-container > .content > .files > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  background: var(--color-lightgray);
+  min-width: 160px;
+  height: 160px;
+  border-radius: 4px;
+  padding: 8px 12px;
+}
+
+.upload-container > .content > .files > div > .data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  max-width: 240px;
+  overflow: scroll;
+}
+
+.upload-container > .content > .files > div > .data > p {
+  text-align: center;
+  word-wrap: break-word;
+  width: 100%;
+  height: 40px;
+}
+
+.upload-container > .content > .files > div > .data > img {
+  width: 64px;
+  height: 64px;
+}
+
+.upload-container > .content > .files > div > a {
+  padding: 1px 2px;
+  color: var(--color-darkblue);
+}
+
+/* #endregion */
+
+/* #region new file dialog */
+dialog#new-file {
+  width: 320px;
+  height: 120px;
+  left: calc(50% - 160px);
+  top: calc(50% - 60px);
+  background: radial-gradient(circle farthest-side, #2e7ae6, #2e9fe6);
+  padding: 8px;
+  border-radius: 8px;
+}
+
+dialog#new-file > form {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+dialog#new-file > form > .dialog-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+dialog#new-file > form > .dialog-container > p::first-letter {
+  text-transform: capitalize;
+}
+
+dialog#new-file > form > .dialog-container > p {
+  color: var(--color-black);
+}
+
+dialog#new-file > form > .dialog-container > input {
+  outline: none;
+  border: 1px solid var(--color-black);
+  background: var(--color-lightgray);
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+dialog#new-file > form > .buttons-container {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+dialog#new-file > form > .buttons-container > input,
+dialog#new-file > form > .buttons-container > div {
+  padding: 4px 8px;
+  background: var(--color-lightblue);
+  border: 1px solid var(--color-lightgray);
+  border-radius: 4px;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 12px;
+  color: var(--color-white);
+  cursor: pointer;
+}
+/* #endregion */
+
+/* #region new file dialog */
+dialog#new-dir {
+  width: 320px;
+  height: 120px;
+  left: calc(50% - 160px);
+  top: calc(50% - 60px);
+  background: radial-gradient(circle farthest-side, #2e7ae6, #2e9fe6);
+  padding: 8px;
+  border-radius: 8px;
+}
+
+dialog#new-dir > form {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+dialog#new-dir > form > .dialog-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+dialog#new-dir > form > .dialog-container > p::first-letter {
+  text-transform: capitalize;
+}
+
+dialog#new-dir > form > .dialog-container > p {
+  color: var(--color-black);
+}
+
+dialog#new-dir > form > .dialog-container > input {
+  outline: none;
+  border: 1px solid var(--color-black);
+  background: var(--color-lightgray);
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+dialog#new-dir > form > .buttons-container {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+dialog#new-dir > form > .buttons-container > input,
+dialog#new-dir > form > .buttons-container > div {
+  padding: 4px 8px;
+  background: var(--color-lightblue);
+  border: 1px solid var(--color-lightgray);
+  border-radius: 4px;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 12px;
+  color: var(--color-white);
+  cursor: pointer;
+}
+/* #endregion */
+
+/* #region rename directory dialog */
+dialog#rename-dir {
+  width: 320px;
+  height: 120px;
+  left: calc(50% - 160px);
+  top: calc(50% - 60px);
+  background: radial-gradient(circle farthest-side, #2e7ae6, #2e9fe6);
+  padding: 8px;
+  border-radius: 8px;
+}
+
+dialog#rename-dir > form {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+dialog#rename-dir > form > .dialog-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+dialog#rename-dir > form > .dialog-container > p::first-letter {
+  text-transform: capitalize;
+}
+
+dialog#rename-dir > form > .dialog-container > p {
+  color: var(--color-black);
+}
+
+dialog#rename-dir > form > .dialog-container > input {
+  outline: none;
+  border: 1px solid var(--color-black);
+  background: var(--color-lightgray);
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+dialog#rename-dir > form > .buttons-container {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+dialog#rename-dir > form > .buttons-container > input,
+dialog#rename-dir > form > .buttons-container > div {
+  padding: 4px 8px;
+  background: var(--color-lightblue);
+  border: 1px solid var(--color-lightgray);
+  border-radius: 4px;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 12px;
+  color: var(--color-white);
+  cursor: pointer;
+}
+/* #endregion */

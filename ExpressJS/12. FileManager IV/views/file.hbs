@@ -1,0 +1,115 @@
+{{> navbar}}
+<div class="container">
+  <aside>
+    <div class="button">
+
+      <div class="font-button" onclick="increaseFontSize()"><p>+</p></div>
+      <div class="font-button" onclick="decreaseFontSize()"><p>-</p></div>
+      <div class="themes" onclick="changeTheme()">motywy</div>
+    </div>
+    <div class="button" onclick="saveStyle()">
+      <p>zapisz ustawienia</p>
+    </div>
+    <div
+      class="button"
+      onclick="document.getElementById('rename-file').showModal()"
+    >
+      <p>zmiana nazwy</p>
+    </div>
+
+    <dialog id="rename-file">
+      <form action="/rename-file" method="get">
+        <div class="dialog-container">
+          <p>nowa nazwa pliku <span>{{file.name}}</span></p>
+          {{!-- <input type="hidden" name="path" value="{{file.root}}" /> --}}
+          <input type="hidden" name="oldName" value="{{file.name}}" />
+          <input type="text" name="newName" />
+        </div>
+        <div class="buttons-container">
+          <input type="submit" value="ok" />
+          <div
+            onclick="document.getElementById('rename-file').close()"
+          >cancel</div>
+        </div>
+      </form>
+    </dialog>
+    <p class="message">{{message}}</p>
+  </aside>
+  <div class="showfile-content">
+    <form action="/save-file" method="post">
+      <input type="hidden" name="name" value="{{file.name}}" />
+      <div class="filename"><p>{{file.path}}</p></div>
+      <div class="file-content">
+        <div id="lines"></div>
+        <textarea
+          name="content"
+          id="textarea"
+          cols="50"
+          rows="10"
+          onkeyup="setLines()"
+        >{{file.content}}</textarea>
+        <script>
+          // set lines amount
+          const setLines = function() { const area =
+          document.getElementById("textarea"); const lines =
+          document.getElementById("lines"); lines.innerHTML = '';
+          area.value.split('\n').map(function(el, i) { lines.innerHTML +=
+          `${i + 1}<br />` }) }; setLines();
+
+          // variables
+          let themeIndex = 0;
+          let fontIndex = 4;
+          let fonts = [];
+          let themes = [];
+          const textarea = document.querySelector("#textarea");
+          const lines = document.querySelector("#lines");
+
+          // get themes and fonts data from server
+          fetch("/themes.config.json").then(function (res) {
+            res.json().then(function(data) {
+              themeIndex = data.themeIndex;
+              fontIndex = data.fontIndex;
+              fonts = data.fonts;
+              themes = data.themes;
+              textarea.style.color = themes[themeIndex].color;
+              textarea.style.background = themes[themeIndex].background;
+              textarea.style.fontSize = `${fonts[fontIndex]}px`;
+              lines.style.color = themes[themeIndex].color;
+              lines.style.background = themes[themeIndex].background;
+              lines.style.fontSize = `${fonts[fontIndex]}px`;
+            })
+          })
+
+          const increaseFontSize = function() {
+            fontIndex = (fontIndex + 1) % fonts.length;
+            textarea.style.fontSize = `${fonts[fontIndex]}px`;
+            lines.style.fontSize = `${fonts[fontIndex]}px`;
+          };
+          const decreaseFontSize = function() {
+            fontIndex = (fontIndex - 1) % fonts.length;
+            textarea.style.fontSize = `${fonts[fontIndex]}px`;
+            lines.style.fontSize = `${fonts[fontIndex]}px`;
+          };
+          const changeTheme = function() {
+            themeIndex = (themeIndex + 1) % themes.length;
+            textarea.style.color = themes[themeIndex].color;
+            textarea.style.background = themes[themeIndex].background;
+            lines.style.color = themes[themeIndex].color;
+            lines.style.background = themes[themeIndex].background;
+          };
+          function saveStyle() {
+            const options = {
+              method: "post",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ fonts: fonts, themes: themes, themeIndex: themeIndex,fontIndex: fontIndex })
+            };
+            fetch("/save-style", options).then(function(response) {response.json()});
+          }
+      </script>
+      </div>
+      <div class="save-file">
+        <input type="submit" value="zapisz zmiany" />
+      </div>
+    </form>
+  </div>
+</div>
