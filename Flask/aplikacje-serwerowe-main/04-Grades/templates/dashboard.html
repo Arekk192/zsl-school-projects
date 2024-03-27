@@ -1,0 +1,144 @@
+{% extends "bootstrap/base.html" %}
+{% block scripts %}
+    {{ super() }}
+    {{ moment.include_moment() }}
+    {{ moment.locale('pl') }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script src="{{ url_for('.static', filename='timeNow.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    </script>
+    <script>
+        const data = {
+            labels: [
+                {% for subject in grades %}
+                    '{{ subject | title }}',
+                {% endfor %}
+            ],
+            datasets: [
+                {
+                    label: 'Średnia ocen - semestr pierwszy',
+                    backgroundColor: 'rgb(110, 66, 193, 0.5)',
+                    data: [
+                        {% for subject, terms in grades.items() %}
+                            '{{ countAverage(subject, 'term1') }}',
+                        {% endfor %}
+                    ]
+                },
+                {
+                    label: 'Średnia ocen - semestr drugi',
+                    backgroundColor: 'rgb(20, 164, 77, 0.5)',
+                    data: [
+                        {% for subject, terms in grades.items() %}
+                            '{{ countAverage(subject, 'term2') }}',
+                        {% endfor %}
+                    ]
+                }
+            ]
+        };
+
+        const config = {
+            type: 'bar',
+            data: data,
+            options: {}
+        };
+    </script>
+    <script>
+        const myChart = new Chart(
+            document.getElementById('myChart'),
+            config
+        );
+    </script>
+{% endblock %}
+{% block title %}{{ title }}{% endblock %}
+{% block navbar %}
+    {% if userLogin %}
+        {% include "includes/navbar-login.html" %}
+    {% else %}
+        {% include "includes/navbar.html" %}
+    {%  endif %}
+{% endblock %}
+{% block body_attribs %} onload="startTime()" {% endblock %}
+{% block content %}
+    <div class="px-5">
+        <div class="row">
+            <div class="col-lg-12">
+                {% with messages = get_flashed_messages(with_categories=True) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-1">
+                <div class="card" style="height: 150px;">
+                    <div class="card-header">Średnia</div>
+                    <div class="card-body">
+                        <div class="card-text text-center mt-4 h4">
+                            {{ countAverage('', '') }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card" style="height: 150px;">
+                    <div class="card-header">Średnia 4,75</div>
+                    <div class="card-body">
+                        <h5 class="card-title">Przedmioy ze średnią 4,75 lub wyższą</h5>
+                        <p class="card-text">
+                            matematyka 4,78, biologia 5,06, chemia 5,75
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card" style="height: 150px;">
+                    <div class="card-header">Zagrożenia</div>
+                    <div class="card-body">
+                        <h5 class="card-title">Przedmioty ze średnią poniżej 2,0</h5>
+                        <p class="card-text">
+                            informatyka 1,78, plastyka 1,06, wf 1,75
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="card" style="height: 150px;">
+                    <div class="card-header">Pogoda - Kraków</div>
+                    <div class="card-body p-0 m-0">
+                        <div class="row align-items-center text-center mt-3" style="font-size: 1vw;">
+                            <div class="col">
+                                Temperatura: {{ weather['temperatura'] }} &deg;C<br>
+                                Ciśnienie: {{ weather['cisnienie'] | int }} hPa<br>
+                                Opday: {{ weather['suma_opadu'] }} mm
+                            </div>
+                            <div class="col">
+                                Powietrze: {{ airQuality['stIndexLevel']['indexLevelName'] }}<br>
+                                PM10: {{ airQuality['pm10IndexLevel']['indexLevelName'] }}<br>
+                                PM2.5: {{ airQuality['pm25IndexLevel']['indexLevelName'] }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-lg-12">
+                {% include "includes/gradesTab.html" %}
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-lg-12">
+                <canvas id="myChart"></canvas>
+            </div>
+        </div>
+    </div>
+{% endblock %}

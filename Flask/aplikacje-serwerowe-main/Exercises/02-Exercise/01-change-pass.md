@@ -1,0 +1,1 @@
+Napisz funkcję pozwalającą zmienić hasło zalogowanemu użytkownikowi. Link do zmiany hasła ma być w menu w navbar. Zmiana hasła ma być możliwa po podaniu aktualnego hasła w formularzu. **- 3 pkt**

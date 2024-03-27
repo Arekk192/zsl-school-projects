@@ -1,0 +1,35 @@
+<nav class="navbar navbar-expand-lg bg-body py-3">
+    <div class="col-lg-12 d-flex justify-content-between px-5">
+        <a class="navbar-brand d-flex align-items-center" href="/dashboard">
+            <i class="bi bi-house">&nbsp;</i>
+            <span>Home</span>
+        </a>
+        <p class="fw-light h5 text-center p-1">
+            {{ moment(date).format('dddd DD MMMM YYYY') }}
+            <span id="timeNow"></span>
+        </p>
+        <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                Witaj, {{ firstName | title }}
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                    <a href="{{ url_for('addSubject') }}" class="dropdown-item">
+                        <i class="bi bi-plus-square pe-2"></i>Dodaj przedmiot
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('addGrade') }}" class="dropdown-item">
+                        <i class="bi bi-plus-square-fill pe-2"></i>Dodaj ocenę
+                    </a>
+                </li>
+                <li class="dropdown-divider"></li>
+                <li>
+                    <a href="/logOut" class="dropdown-item">
+                        <i class="bi bi-box-arrow-in-right pe-2"></i>Wyloguj
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

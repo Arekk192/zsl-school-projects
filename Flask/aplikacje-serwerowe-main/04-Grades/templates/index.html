@@ -1,0 +1,27 @@
+{% extends "bootstrap/base.html" %}
+{% block scripts %}
+    {{ super() }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+{% endblock %}
+{% block title %}{{ title }}{% endblock %}
+{% block navbar %}
+
+{% endblock %}
+{% block content %}
+    <div class="container py-4" style="margin-top: 50px;">
+        <div class="row gy-4">
+            <div class="col-lg-6">
+                <div class="p-lg-5 m-lg-5 float-end">
+                    <i class="bi bi-easel2" style="font-size: 200px;"></i>
+                </div>
+            </div>
+            <div class="col-lg-6 d-lg-flex align-items-lg-center">
+                <div style="max-width: 350px">
+                    <h2 class="text-uppercase fw-bold">Dziennik elektroniczny</h2>
+                    <p class="my-3">Dziennik elektroniczny oparty na plikach json.</p>
+                    <a class="btn btn-outline-warning btn-sm" role="button" href="/logIn">Zaloguj</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
