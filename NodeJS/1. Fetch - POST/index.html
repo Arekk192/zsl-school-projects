@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .button {
+        width: 320px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 12px 0 0;
+        background: green;
+        color: white;
+        border-radius: 4px;
+        border: 1px solid black;
+        user-select: none;
+      }
+    </style>
+  </head>
+  <body>
+    <select name="firstName" id="firstName">
+      <option value="Jan">Jan</option>
+      <option value="Piotr">Piotr</option>
+      <option value="Anna">Anna</option>
+      <option value="Maciej">Maciej</option>
+    </select>
+    <select name="lastName" id="lastName">
+      <option value="Kowalski">Kowalski</option>
+      <option value="Nowak">Nowak</option>
+      <option value="Michalak">Michalak</option>
+      <option value="Maniecki">Maniecki</option>
+    </select>
+    <div class="button">click</div>
+
+    <script>
+      const fetchPost = async () => {
+        const firstName = document.getElementById("firstName").value;
+        const lastName = document.getElementById("lastName").value;
+        const data = JSON.stringify({
+          firstName: firstName,
+          lastName: lastName,
+        });
+        const res = await fetch("/login", { method: "POST", body: data });
+        if (res.ok) return await res.text();
+        else return res.status;
+      };
+      const onclick = async () => {
+        const data = await fetchPost();
+        alert(data);
+      };
+      document.getElementsByClassName("button")[0].onclick = () => onclick();
+    </script>
+  </body>
+</html>

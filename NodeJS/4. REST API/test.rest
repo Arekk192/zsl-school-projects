@@ -1,0 +1,27 @@
+### GET - get all data
+GET http://localhost:3000/api/tasks HTTP/1.1
+
+### GET - get 1 element by id
+GET http://localhost:3000/api/tasks/1 HTTP/1.1
+
+### POST - add new data
+POST http://localhost:3000/api/tasks HTTP/1.1
+content-type: application/json
+
+{
+    "a": 1, 
+    "b": 2
+}
+
+### DELETE - delete data by id
+DELETE http://localhost:3000/api/tasks/1 HTTP/1.1
+
+### PATCH - update data by id
+PATCH http://localhost:3000/api/tasks HTTP/1.1
+content-type: application/json
+
+{
+    "id": 10,
+    "a": 111111,
+    "b": 222222
+}
