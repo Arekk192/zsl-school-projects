@@ -165,7 +165,7 @@ app.get("/new-file", (req, res) => {
   if (ext == ".html")
     fileContent = `<!DOCTYPE html>\n<html lang="en">\n<head>\n    <meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n    <title>Document</title>\n</head>\n<body>\n    \n</body>\n</html>`;
   else if (ext == ".css")
-    fileContent = `* {\n    margin: 0;\n    padding:0\n    box-sizing:border-box;\n}`;
+    fileContent = `* {\n    margin: 0;\n    padding: 0;\n    box-sizing: border-box;\n}`;
   else if (ext == ".json")
     fileContent = `{\n    "value1": 1,\n    "value2": 2,\n    "value3": 3\n}`;
 
