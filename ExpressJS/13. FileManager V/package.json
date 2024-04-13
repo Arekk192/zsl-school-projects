@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "express": "^4.18.2",
+    "express-handlebars": "^5.3.5",
+    "formidable": "^1.2.2",
+    "nocache": "^4.0.0"
+  }
+}
