@@ -1,0 +1,83 @@
+<table class="table table-sm align-middle">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Imię</th>
+            <th>Nazwisko</th>
+            <th>Email</th>
+            <th>Uprawnienia</th>
+            <th class="text-end">Edycja</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.firstName }}</td>
+                <td>{{ user.lastName }}</td>
+                <td>{{ user.userMail }}</td>
+                <td>
+                    {% if user.userRole == 'admin' %}
+                        Administrator
+                    {% else %}
+                        Użytkownik
+                    {% endif %}
+                </td>
+                <td class="text-end">
+                    <a href="#" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#changeUserPass{{ user.id }}">
+                        <i class="bi bi-key"></i>
+                    </a>
+                    <a href="#" class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#editUser{{ user.id }}">
+                        <i class="bi bi-pencil-square"></i>
+                    </a>
+                    <a href="#" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteUser{{ user.id }}">
+                        <i class="bi bi-trash3"></i>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<div class="row float-end">
+    <a href="" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addUser">Dodaj użytkownika</a>
+</div>
+
+
+
+{#<table class="table table-sm align-middle">#}
+{#    <thead>#}
+{#        <tr>#}
+{#            <th>ID</th>#}
+{#            <th>Imię</th>#}
+{#            <th>Nazwisko</th>#}
+{#            <th>Email</th>#}
+{#            <th>Uprawnienia</th>#}
+{#            <th class="text-end">Edycja</th>#}
+{#        </tr>#}
+{#    </thead>#}
+{#    <tbody>#}
+{#        {% for user in users %}#}
+{#            <tr>#}
+{#                <td>{{ user.id }}</td>#}
+{#                <td>{{ user.firstName }}</td>#}
+{#                <td>{{ user.lastName }}</td>#}
+{#                <td>{{ user.userMail }}</td>#}
+{#                <td> {% if user.userRole == 'admin' %} Administrator {% else %} Użytkownik {% endif %} </td>#}
+{#                <td class="text-end">#}
+{#                    <a href="#" class="btn btn-sm btn-outline-primary">#}
+{#                        <i class="bi bi-key"></i>#}
+{#                    </a>#}
+{#                    <a href="#" class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#editUser{{ user.id }}">#}
+{#                        <i class="bi bi-pencil-square"></i>#}
+{#                    </a>#}
+{#                    <a href="#" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteUser{{ user.id }}">#}
+{#                        <i class="bi bi-trash3"></i>#}
+{#                    </a>#}
+{#                </td>#}
+{#            </tr>#}
+{#        {% endfor %}#}
+{#    </tbody>#}
+{#</table>#}
+{#<div class="row float-end">#}
+{#    <a href="" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addUser">Dodaj użytkownika</a>#}
+{#</div>#}
