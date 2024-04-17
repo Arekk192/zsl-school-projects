@@ -32,25 +32,29 @@
                 <p class="text-center">Zastosowanie Flask-Login i Flask-SQLAlchemy</p>
                 <div class="d-grid py-3">
                     <form method="post" action="">
-                        {{ form.hidden_tag() }}
+                        {{ register.hidden_tag() }}
                         <div class="input-group flex-nowrap py-1">
                             <span class="input-group-text text-secondary"><i class="bi bi-person text-secondary"></i></span>
-                            {{ form.firstName(class="form-control") }}
+                            {{ register.firstName(class="form-control") }}
                         </div>
                         <div class="input-group flex-nowrap py-1">
                             <span class="input-group-text text-secondary"><i class="bi bi-person text-secondary"></i></span>
-                            {{ form.lastName(class="form-control") }}
+                            {{ register.lastName(class="form-control") }}
                         </div>
                         <div class="input-group flex-nowrap py-1">
                             <span class="input-group-text text-secondary">@</span>
-                            {{ form.userMail(class="form-control") }}
+                            {{ register.userMail(class="form-control") }}
                         </div>
                         <div class="input-group flex-nowrap py-1">
                             <span class="input-group-text text-secondary"><i class="bi bi-key text-secondary"></i></span>
-                            {{ form.userPass(class="form-control") }}
+                            {{ register.userPass(class="form-control") }}
                         </div>
-                        <div class="py-4 d-grid">
-                            {{ form.submit(class="btn btn-outline-secondary rounded-1") }}
+                        <div class="input-group flex-nowrap py-1">
+                            <span class="input-group-text text-secondary"><i class="bi bi-person-gear text-secondary"></i></span>
+                            {{ register.userRole(class="form-control") }}
+                        </div>
+                        <div class="py-5 d-grid">
+                            {{ register.submit(class="btn btn-outline-secondary rounded-1") }}
                         </div>
                     </form>
                 </div>
