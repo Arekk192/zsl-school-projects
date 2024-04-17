@@ -8,6 +8,7 @@ interface Field {
   y: number;
   xPos: number;
   yPos: number;
+  color: string;
 }
 
 export default class Map {
@@ -20,9 +21,8 @@ export default class Map {
   readonly canvas: HTMLCanvasElement = document.querySelector("#game_canvas")!;
   private fields: Array<Array<Field>> = [];
   private selectedFields: Array<Field> = [];
-  private lastColoredElement: null | Field = null;
-  private multiselect: boolean = false;
-  private multiselectStart: null | Field = null;
+  private select: boolean = false;
+  private selectStart: null | Field = null;
 
   constructor(mapSize: MapSize, size: number = 32) {
     this.mapSize = mapSize;
@@ -50,7 +50,7 @@ export default class Map {
         const yPos = y * size + 1;
 
         ctx.fillRect(xPos, yPos, size - 1, size - 1);
-        fieldsX.push({ x: x, y: y, xPos: xPos, yPos: yPos });
+        fieldsX.push({ x: x, y: y, xPos: xPos, yPos: yPos, color: "green" });
       }
       fields.push(fieldsX);
     }
@@ -74,51 +74,48 @@ export default class Map {
 
   addMouseMoveEventListeners() {
     this.canvas.addEventListener("mousemove", (e) => {
-      if (e.target instanceof HTMLElement && !this.multiselect) {
-        // TODO selectedFields and lastColoredElement conflict
-        const el = this.lastColoredElement;
-        if (el) this.colorField(el, "green");
+      const field = this.getField(e);
+      this.selectedFields.forEach((f) => this.colorField(f, f.color));
+      this.selectedFields = [];
 
-        const field = this.getField(e);
+      if (!this.select) {
         this.colorField(field, "blue");
-        this.lastColoredElement = field;
+        this.selectedFields = [field];
       } else {
-        const start = this.multiselectStart!;
-        const end = this.getField(e);
+        const start = this.selectStart!;
         const fields = this.fields;
-
-        this.selectedFields.forEach((field) => this.colorField(field, "green"));
-        for (let x = start.x; x <= end.x; x++) {
-          for (let y = start.y; y <= end.y; y++) {
+        for (let x = start.x; x <= field.x; x++) {
+          for (let y = start.y; y <= field.y; y++) {
             this.selectedFields.push(fields[x][y]);
             this.colorField(fields[x][y], "orange");
           }
         }
+        this.fields = fields;
       }
     });
   }
 
   addMouseDownEventListeners() {
     this.canvas.addEventListener("mousedown", (e) => {
-      this.multiselect = true;
-      this.multiselectStart = this.getField(e);
+      this.select = true;
+      this.selectStart = this.getField(e);
     });
   }
 
   addMouseUpEventListeners() {
     this.canvas.addEventListener("mouseup", (e) => {
-      const start = this.multiselectStart!;
-      const end = this.getField(e);
-      const fields = this.fields;
-
-      for (let x = start.x; x <= end.x; x++) {
-        for (let y = start.y; y <= end.y; y++) {
-          this.selectedFields.push(fields[x][y]);
-          this.colorField(fields[x][y], "orange");
-        }
+      const field = this.getField(e);
+      const start = this.selectStart!;
+      if (start.x == field.x && start!.y == field.y) {
+        this.colorField(field, "orange");
+        this.fields[field.x][field.y].color = "orange";
+      } else {
+        const fields = this.fields;
+        this.selectedFields.forEach((f) => (fields[f.x][f.y].color = "orange"));
+        this.selectedFields = [];
+        this.fields = fields;
       }
-      this.multiselect = false;
-      this.selectedFields = [];
+      this.select = false;
     });
   }
 }
