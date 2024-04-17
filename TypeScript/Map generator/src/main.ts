@@ -10,14 +10,16 @@ const spriteSheetStyle = `width: ${x * size}px; height: ${y * size}px;`;
 
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <div class="container">
+    <!--
     <div id="spritesheet">
       <img style="${spriteSheetStyle}" src=${spriteSheetImage} />
     </div>
-    
+    -->
+
     <canvas id="game_canvas"></canvas>
   </div>
 `;
 
-const map = new Map({ width: 10, height: 8 }, 64);
+const map = new Map({ width: 10, height: 8 }, 48);
 
 // <div id="map"></div>

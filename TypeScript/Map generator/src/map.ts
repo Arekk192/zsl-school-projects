@@ -6,94 +6,119 @@ interface MapSize {
 interface Field {
   x: number;
   y: number;
+  xPos: number;
+  yPos: number;
 }
 
 export default class Map {
+  /**
+   * @param mapSize - Amount of fields, map is always a square
+   * @param size - Size of a single field in px
+   */
   mapSize: MapSize;
   size: number;
-  canvas: HTMLCanvasElement;
-  fields: Array<Array<Field>>;
+  readonly canvas: HTMLCanvasElement = document.querySelector("#game_canvas")!;
+  private fields: Array<Array<Field>> = [];
+  private selectedFields: Array<Field> = [];
+  private lastColoredElement: null | Field = null;
+  private multiselect: boolean = false;
+  private multiselectStart: null | Field = null;
 
-  lastColoredElement: null | Field;
-
-  constructor(mapSize: MapSize, size: number) {
+  constructor(mapSize: MapSize, size: number = 32) {
     this.mapSize = mapSize;
     this.size = size;
-    this.fields = [];
-    this.lastColoredElement = null;
-
-    const canvas: HTMLCanvasElement = document.querySelector("#game_canvas")!;
-    canvas.width = mapSize.width * size;
-    canvas.height = mapSize.height * size;
-    this.canvas = canvas;
+    this.canvas.width = mapSize.width * size;
+    this.canvas.height = mapSize.height * size;
 
     this.generateFields();
-    this.addClickEventListeners();
     this.addMouseDownEventListeners();
+    this.addMouseMoveEventListeners();
+    this.addMouseUpEventListeners();
   }
 
   generateFields() {
-    const mapSize = this.mapSize;
-    const fieldSize = this.size;
-
     const ctx = this.canvas.getContext("2d")!;
-    ctx.strokeStyle = "green";
-    ctx.fillStyle = "green";
-
     const fields: Array<Array<Field>> = [];
+    const size = this.size;
+    const mapSize = this.mapSize;
+    ctx.fillStyle = "green";
 
     for (let x = 0; x < mapSize.width; x++) {
       const fieldsX: Array<Field> = [];
       for (let y = 0; y < mapSize.height; y++) {
-        ctx.rect(x, y, fieldSize, fieldSize);
+        const xPos = x * size + 1;
+        const yPos = y * size + 1;
 
-        const xPos = x * fieldSize;
-        const yPos = y * fieldSize;
-
-        ctx.fillRect(1 + xPos, 1 + yPos, fieldSize - 1, fieldSize - 1);
-        fieldsX.push({ x: xPos, y: yPos });
+        ctx.fillRect(xPos, yPos, size - 1, size - 1);
+        fieldsX.push({ x: x, y: y, xPos: xPos, yPos: yPos });
       }
       fields.push(fieldsX);
     }
     this.fields = fields;
   }
 
-  addClickEventListeners() {
-    this.canvas.addEventListener("click", (e) => {
-      if (e.target instanceof HTMLElement) {
-        const rect = e.target.getBoundingClientRect();
+  colorField(field: Field, color: string) {
+    const size = this.size;
+    const ctx = this.canvas.getContext("2d")!;
+    ctx.fillStyle = color;
+    ctx.fillRect(field.xPos, field.yPos, size - 1, size - 1);
+  }
 
-        const x = Math.floor((e.clientX - rect.x) / this.size);
-        const y = Math.floor((e.clientY - rect.y) / this.size);
+  getField(e: MouseEvent) {
+    const target = e.target as HTMLElement;
+    const rect = target.getBoundingClientRect();
+    const x = Math.floor((e.clientX - rect.x) / this.size);
+    const y = Math.floor((e.clientY - rect.y) / this.size);
+    return this.fields[x][y];
+  }
 
-        console.log(x, y);
+  addMouseMoveEventListeners() {
+    this.canvas.addEventListener("mousemove", (e) => {
+      if (e.target instanceof HTMLElement && !this.multiselect) {
+        // TODO selectedFields and lastColoredElement conflict
+        const el = this.lastColoredElement;
+        if (el) this.colorField(el, "green");
 
-        const field = this.fields[x][y];
+        const field = this.getField(e);
+        this.colorField(field, "blue");
+        this.lastColoredElement = field;
+      } else {
+        const start = this.multiselectStart!;
+        const end = this.getField(e);
+        const fields = this.fields;
+
+        this.selectedFields.forEach((field) => this.colorField(field, "green"));
+        for (let x = start.x; x <= end.x; x++) {
+          for (let y = start.y; y <= end.y; y++) {
+            this.selectedFields.push(fields[x][y]);
+            this.colorField(fields[x][y], "orange");
+          }
+        }
       }
     });
   }
 
   addMouseDownEventListeners() {
-    this.canvas.addEventListener("mousemove", (e) => {
-      if (e.target instanceof HTMLElement) {
-        const ctx = this.canvas.getContext("2d")!;
+    this.canvas.addEventListener("mousedown", (e) => {
+      this.multiselect = true;
+      this.multiselectStart = this.getField(e);
+    });
+  }
 
-        const rect = e.target.getBoundingClientRect();
-        const x = Math.floor((e.clientX - rect.x) / this.size);
-        const y = Math.floor((e.clientY - rect.y) / this.size);
-        const size = this.size;
-        const field = this.fields[x][y];
+  addMouseUpEventListeners() {
+    this.canvas.addEventListener("mouseup", (e) => {
+      const start = this.multiselectStart!;
+      const end = this.getField(e);
+      const fields = this.fields;
 
-        const el = this.lastColoredElement;
-        ctx.fillStyle = "green";
-        if (el) ctx.fillRect(el.x + 1, el.y + 1, size - 1, size - 1);
-
-        ctx.fillStyle = "blue";
-        ctx.fillRect(field.x + 1, field.y + 1, size - 1, size - 1);
-        this.lastColoredElement = field;
+      for (let x = start.x; x <= end.x; x++) {
+        for (let y = start.y; y <= end.y; y++) {
+          this.selectedFields.push(fields[x][y]);
+          this.colorField(fields[x][y], "orange");
+        }
       }
+      this.multiselect = false;
+      this.selectedFields = [];
     });
   }
 }
-
-// TODO color rect if clicked
