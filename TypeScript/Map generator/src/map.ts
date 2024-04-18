@@ -24,6 +24,9 @@ export default class Map {
   private select: boolean = false;
   private selectStart: null | Field = null;
 
+  private chosenFields: Array<Field> = [];
+  private multiSelect: boolean = false;
+
   constructor(mapSize: MapSize, size: number = 32) {
     this.mapSize = mapSize;
     this.size = size;
@@ -34,6 +37,8 @@ export default class Map {
     this.addMouseDownEventListeners();
     this.addMouseMoveEventListeners();
     this.addMouseUpEventListeners();
+    this.addKeyDownEventListener();
+    this.addKeyUpEventListener();
   }
 
   generateFields() {
@@ -76,11 +81,12 @@ export default class Map {
     this.canvas.addEventListener("mousemove", (e) => {
       const field = this.getField(e);
       this.selectedFields.forEach((f) => this.colorField(f, f.color));
+      this.chosenFields.forEach((f) => this.colorField(f, "orange"));
       this.selectedFields = [];
 
       if (!this.select) {
         this.colorField(field, "blue");
-        this.selectedFields = [field];
+        this.selectedFields.push(field);
       } else {
         const start = this.selectStart!;
         const fields = this.fields;
@@ -97,6 +103,14 @@ export default class Map {
 
   addMouseDownEventListeners() {
     this.canvas.addEventListener("mousedown", (e) => {
+      if (!this.multiSelect) {
+        const chosenFields = this.chosenFields;
+        if (chosenFields.length)
+          chosenFields.forEach((f) => this.colorField(f, f.color));
+
+        this.chosenFields = [];
+      }
+
       this.select = true;
       this.selectStart = this.getField(e);
     });
@@ -108,14 +122,39 @@ export default class Map {
       const start = this.selectStart!;
       if (start.x == field.x && start!.y == field.y) {
         this.colorField(field, "orange");
-        this.fields[field.x][field.y].color = "orange";
+        this.chosenFields.push(field);
       } else {
-        const fields = this.fields;
-        this.selectedFields.forEach((f) => (fields[f.x][f.y].color = "orange"));
+        const chosenFields = this.chosenFields;
+        this.selectedFields.forEach((f) => chosenFields.push(f));
+        this.chosenFields = chosenFields;
         this.selectedFields = [];
-        this.fields = fields;
       }
       this.select = false;
+    });
+  }
+
+  addKeyDownEventListener() {
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        const fields = this.fields;
+        this.chosenFields.forEach((field) => {
+          this.colorField(field, "salmon");
+          fields[field.x][field.y].color = "salmon";
+        });
+        this.chosenFields = [];
+        this.fields = fields;
+      } else if (e.key === "Delete") {
+        this.chosenFields.forEach((f) => this.colorField(f, f.color));
+        this.chosenFields = [];
+      } else if (e.key === "Control") {
+        this.multiSelect = true;
+      }
+    });
+  }
+
+  addKeyUpEventListener() {
+    document.addEventListener("keyup", (e) => {
+      if (e.key === "Control") this.multiSelect = false;
     });
   }
 }
