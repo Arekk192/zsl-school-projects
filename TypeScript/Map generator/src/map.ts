@@ -1,41 +1,32 @@
+import BaseMap, { Field } from "./baseMap";
+
 interface MapSize {
   width: number;
   height: number;
 }
 
-interface Field {
-  x: number;
-  y: number;
-  xPos: number;
-  yPos: number;
-  color: string;
-}
-
-export default class Map {
+export default class Map extends BaseMap {
   /**
    * @param mapSize - Amount of fields, map is always a square
    * @param size - Size of a single field in px
    */
-  public mapSize: MapSize;
-  public size: number;
+  private mapSize: MapSize;
   readonly canvas: HTMLCanvasElement = document.querySelector("#map_canvas")!;
-  private fields: Array<Array<Field>> = [];
-  private selectedFields: Array<Field> = [];
-  private select: boolean = false;
-  private selectStart: null | Field = null;
-
-  private chosenFields: Array<Field> = [];
   private multiSelect: boolean = false;
 
   constructor(mapSize: MapSize, size: number = 32) {
+    super("map", size);
+
     this.mapSize = mapSize;
-    this.size = size;
     this.canvas.width = mapSize.width * size;
     this.canvas.height = mapSize.height * size;
 
     this.generateFields();
+
     this.addMouseDownEventListeners();
-    this.addMouseMoveEventListeners();
+    this.addMouseMoveEventListeners((field: Field, color: string) =>
+      this.colorField(field, color)
+    );
     this.addMouseUpEventListeners();
     this.addKeyDownEventListener();
     this.addKeyUpEventListener();
@@ -75,60 +66,6 @@ export default class Map {
     ctx.fillRect(field.xPos, field.yPos, size - 1, size - 1);
   }
 
-  getField(e: MouseEvent) {
-    const target = e.target as HTMLElement;
-    const rect = target.getBoundingClientRect();
-    const x = Math.floor((e.clientX - rect.x) / this.size);
-    const y = Math.floor((e.clientY - rect.y) / this.size);
-    return this.fields[x][y];
-  }
-
-  addMouseMoveEventListeners() {
-    this.canvas.addEventListener("mousemove", (e) => {
-      const field = this.getField(e);
-      this.selectedFields.forEach((f) => this.colorField(f, f.color));
-      this.chosenFields.forEach((f) => this.colorField(f, "orange"));
-      this.selectedFields = [];
-
-      if (!this.select) {
-        this.colorField(field, "blue");
-        this.selectedFields.push(field);
-      } else {
-        const start = this.selectStart!;
-        const fields = this.fields;
-
-        let startX: number;
-        let endX: number;
-        let startY: number;
-        let endY: number;
-
-        if (field.x > start.x) {
-          startX = start.x;
-          endX = field.x;
-        } else {
-          startX = field.x;
-          endX = start.x;
-        }
-        if (field.y > start.y) {
-          startY = start.y;
-          endY = field.y;
-        } else {
-          startY = field.y;
-          endY = start.y;
-        }
-
-        for (let x = startX; x <= endX; x++) {
-          for (let y = startY; y <= endY; y++) {
-            this.selectedFields.push(fields[x][y]);
-            this.colorField(fields[x][y], "orange");
-          }
-        }
-
-        this.fields = fields;
-      }
-    });
-  }
-
   addMouseDownEventListeners() {
     this.canvas.addEventListener("mousedown", (e) => {
       if (!this.multiSelect) {
@@ -141,23 +78,6 @@ export default class Map {
 
       this.select = true;
       this.selectStart = this.getField(e);
-    });
-  }
-
-  addMouseUpEventListeners() {
-    this.canvas.addEventListener("mouseup", (e) => {
-      const field = this.getField(e);
-      const start = this.selectStart!;
-      if (start.x == field.x && start!.y == field.y) {
-        this.colorField(field, "orange");
-        this.chosenFields.push(field);
-      } else {
-        const chosenFields = this.chosenFields;
-        this.selectedFields.forEach((f) => chosenFields.push(f));
-        this.chosenFields = chosenFields;
-        this.selectedFields = [];
-      }
-      this.select = false;
     });
   }
 
