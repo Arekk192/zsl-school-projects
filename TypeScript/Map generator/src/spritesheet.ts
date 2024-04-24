@@ -111,16 +111,33 @@ export default class SpriteSheet {
         const start = this.selectStart!;
         const fields = this.fields;
 
-        // TODO solve bug:
-        // if endpoint is lower than startpoint ( [5,3] and [2,1] )
-        // the area will be null because of this for loop below
+        let startX: number;
+        let endX: number;
+        let startY: number;
+        let endY: number;
 
-        for (let x = start.x; x <= field.x; x++) {
-          for (let y = start.y; y <= field.y; y++) {
+        if (field.x > start.x) {
+          startX = start.x;
+          endX = field.x;
+        } else {
+          startX = field.x;
+          endX = start.x;
+        }
+        if (field.y > start.y) {
+          startY = start.y;
+          endY = field.y;
+        } else {
+          startY = field.y;
+          endY = start.y;
+        }
+
+        for (let x = startX; x <= endX; x++) {
+          for (let y = startY; y <= endY; y++) {
             this.selectedFields.push(fields[x][y]);
             this.drawImage(fields[x][y], "green");
           }
         }
+
         this.fields = fields;
       }
     });
