@@ -1,8 +1,3 @@
-interface MapSize {
-  width: number;
-  height: number;
-}
-
 interface Field {
   x: number;
   y: number;
@@ -11,14 +6,12 @@ interface Field {
   color: string;
 }
 
-export default class Map {
-  /**
-   * @param mapSize - Amount of fields, map is always a square
-   * @param size - Size of a single field in px
-   */
-  public mapSize: MapSize;
+export default class SpriteSheet {
+  readonly canvas: HTMLCanvasElement = document.querySelector(
+    "#spritesheet_canvas"
+  )!;
+  readonly image: HTMLImageElement;
   public size: number;
-  readonly canvas: HTMLCanvasElement = document.querySelector("#map_canvas")!;
   private fields: Array<Array<Field>> = [];
   private selectedFields: Array<Field> = [];
   private select: boolean = false;
@@ -27,55 +20,50 @@ export default class Map {
   private chosenFields: Array<Field> = [];
   private multiSelect: boolean = false;
 
-  constructor(mapSize: MapSize, size: number = 32) {
-    this.mapSize = mapSize;
-    this.size = size;
-    this.canvas.width = mapSize.width * size;
-    this.canvas.height = mapSize.height * size;
+  constructor(imageSrc: string, size = 48) {
+    const canvas = this.canvas;
+    const ctx = canvas.getContext("2d")!;
+    const image = new Image();
 
-    this.generateFields();
+    image.src = imageSrc;
+    image.onload = () => ctx.drawImage(image, 0, 0);
+    canvas.width = image.width;
+    canvas.height = image.height;
+
+    this.image = image;
+    this.size = size;
+
+    this.fields = this.getFields();
+
     this.addMouseDownEventListeners();
     this.addMouseMoveEventListeners();
     this.addMouseUpEventListeners();
-    this.addKeyDownEventListener();
-    this.addKeyUpEventListener();
   }
 
-  generateFields() {
-    const ctx = this.canvas.getContext("2d")!;
-    const fields: Array<Array<Field>> = [];
+  getFields() {
+    const canvas = this.canvas;
     const size = this.size;
-    const mapSize = this.mapSize;
-    ctx.fillStyle = "green";
+    const width = canvas.width / size;
+    const height = canvas.height / size;
+    const fields: Array<Array<Field>> = [];
 
-    for (let x = 0; x < mapSize.width; x++) {
+    for (let x = 0; x < width; x++) {
       const fieldsX: Array<Field> = [];
-      for (let y = 0; y < mapSize.height; y++) {
+      for (let y = 0; y < height; y++) {
         const xPos = x * size + 1;
         const yPos = y * size + 1;
-
-        ctx.fillRect(xPos, yPos, size - 1, size - 1);
         fieldsX.push({
           x: x,
           y: y,
           xPos: xPos,
           yPos: yPos,
-          color: "green",
+          color: "transparent",
         });
       }
       fields.push(fieldsX);
     }
-    this.fields = fields;
+    return fields;
   }
-
-  colorField(field: Field, color: string) {
-    const size = this.size;
-    const ctx = this.canvas.getContext("2d")!;
-    ctx.fillStyle = color;
-    ctx.fillRect(field.xPos, field.yPos, size - 1, size - 1);
-  }
-
-  // TODO https://stackoverflow.com/questions/2359537/how-to-change-the-opacity-alpha-transparency-of-an-element-in-a-canvas-elemen
 
   getField(e: MouseEvent) {
     const target = e.target as HTMLElement;
@@ -85,15 +73,39 @@ export default class Map {
     return this.fields[x][y];
   }
 
+  // colorField(field: Field, color: string) {
+  //   const size = this.size;
+  //   const ctx = this.canvas.getContext("2d")!;
+  //   ctx.fillStyle = color;
+  //   ctx.fillRect(field.xPos, field.yPos, size - 1, size - 1);
+  // }
+
+  drawImage(field: Field, color?: string) {
+    const ctx = this.canvas.getContext("2d")!;
+    const size = this.size;
+
+    const x = field.xPos;
+    const y = field.yPos;
+
+    if (color) {
+      ctx.filter = "opacity(1)";
+      ctx.drawImage(this.image, x, y, size, size, x, y, size, size);
+
+      ctx.fillStyle = color;
+      ctx.filter = "opacity(0.75)";
+      ctx.fillRect(x, y, size, size);
+    } else ctx.drawImage(this.image, x, y, size, size, x, y, size, size);
+  }
+
   addMouseMoveEventListeners() {
     this.canvas.addEventListener("mousemove", (e) => {
       const field = this.getField(e);
-      this.selectedFields.forEach((f) => this.colorField(f, f.color));
-      this.chosenFields.forEach((f) => this.colorField(f, "orange"));
+      this.selectedFields.forEach((f) => this.drawImage(f, "transparent"));
+      this.chosenFields.forEach((f) => this.drawImage(f, "green"));
       this.selectedFields = [];
 
       if (!this.select) {
-        this.colorField(field, "blue");
+        this.drawImage(field, "orange");
         this.selectedFields.push(field);
       } else {
         const start = this.selectStart!;
@@ -106,7 +118,7 @@ export default class Map {
         for (let x = start.x; x <= field.x; x++) {
           for (let y = start.y; y <= field.y; y++) {
             this.selectedFields.push(fields[x][y]);
-            this.colorField(fields[x][y], "orange");
+            this.drawImage(fields[x][y], "green");
           }
         }
         this.fields = fields;
@@ -119,7 +131,7 @@ export default class Map {
       if (!this.multiSelect) {
         const chosenFields = this.chosenFields;
         if (chosenFields.length)
-          chosenFields.forEach((f) => this.colorField(f, f.color));
+          chosenFields.forEach((f) => this.drawImage(f, f.color));
 
         this.chosenFields = [];
       }
@@ -134,7 +146,7 @@ export default class Map {
       const field = this.getField(e);
       const start = this.selectStart!;
       if (start.x == field.x && start!.y == field.y) {
-        this.colorField(field, "orange");
+        this.drawImage(field, "green");
         this.chosenFields.push(field);
       } else {
         const chosenFields = this.chosenFields;
@@ -143,31 +155,6 @@ export default class Map {
         this.selectedFields = [];
       }
       this.select = false;
-    });
-  }
-
-  addKeyDownEventListener() {
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        const fields = this.fields;
-        this.chosenFields.forEach((field) => {
-          this.colorField(field, "salmon");
-          fields[field.x][field.y].color = "salmon";
-        });
-        this.chosenFields = [];
-        this.fields = fields;
-      } else if (e.key === "Delete") {
-        this.chosenFields.forEach((f) => this.colorField(f, f.color));
-        this.chosenFields = [];
-      } else if (e.key === "Control") {
-        this.multiSelect = true;
-      }
-    });
-  }
-
-  addKeyUpEventListener() {
-    document.addEventListener("keyup", (e) => {
-      if (e.key === "Control") this.multiSelect = false;
     });
   }
 }
