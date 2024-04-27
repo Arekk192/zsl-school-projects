@@ -1,7 +1,7 @@
-import "./style.css";
-import spriteSheetImage from "/spritesheet.png";
-import Map from "./map";
+import image from "/spritesheet.png";
 import SpriteSheet from "./spritesheet";
+import Map from "./map";
+import "./style.css";
 
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <div class="container">
@@ -10,5 +10,7 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   </div>
 `;
 
-const spritesheet = new SpriteSheet(spriteSheetImage);
-const map = new Map({ width: 10, height: 8 }, 48);
+const map = new Map({ width: 24, height: 24 }, 48);
+const spritesheet = new SpriteSheet(image, (image: ImageData) =>
+  map.updateFields(image)
+);

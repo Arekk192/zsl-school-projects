@@ -1,28 +1,39 @@
+import imageSource from "/field.png";
+
 export interface Field {
   x: number;
   y: number;
   xPos: number;
   yPos: number;
-  color: string;
+  image: ImageData | null;
 }
 
 export default class BaseMap {
   /**
    * @param size - Size of a single field in px
    */
-  public size: number;
-  public readonly canvas: HTMLCanvasElement;
+  protected size: number;
+  protected readonly canvas: HTMLCanvasElement;
   protected fields: Array<Array<Field>> = [];
-  protected selectedFields: Array<Field> = [];
-  protected select: boolean = false;
-  protected selectStart: null | Field = null;
-  protected chosenFields: Array<Field> = [];
+  protected emptyImage: ImageData;
 
   constructor(canvas: "spritesheet" | "map", size: number = 48) {
     this.size = size;
     this.canvas = document.querySelector<HTMLCanvasElement>(
       `#${canvas}_canvas`
     )!;
+    this.emptyImage = new ImageData(size, size);
+
+    const image = new Image();
+    image.src = imageSource;
+    image.onload = () => {
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d")!;
+
+      context.drawImage(image, 0, 0);
+      const imageData = context.getImageData(0, 0, size, size);
+      this.emptyImage = imageData;
+    };
   }
 
   getField(e: MouseEvent) {
@@ -33,80 +44,23 @@ export default class BaseMap {
     return this.fields[x][y];
   }
 
-  addMouseUpEventListeners() {
-    this.canvas.addEventListener("mouseup", (e) => {
-      const field = this.getField(e);
-      const start = this.selectStart!;
-      if (start.x == field.x && start!.y == field.y) {
-        this.chosenFields.push(field);
-      } else {
-        const chosenFields = this.chosenFields;
-        this.selectedFields.forEach((f) => chosenFields.push(f));
-        this.chosenFields = chosenFields;
-        this.selectedFields = [];
-      }
-      this.select = false;
-    });
+  colorImage(field: Field, backgroundColor: string) {
+    const ctx = this.canvas.getContext("2d")!;
+    const size = this.size;
+    const x = field.xPos;
+    const y = field.yPos;
+
+    ctx.filter = "opacity(1)";
+    if (field.image) ctx.putImageData(field.image, x, y);
+    else ctx.putImageData(this.emptyImage, x, y);
+
+    ctx.fillStyle = backgroundColor;
+    ctx.filter = "opacity(0.75)";
+    ctx.fillRect(x, y, size, size);
   }
 
-  addMouseMoveEventListeners(
-    callback: (field: Field, argument: string) => void
-  ) {
-    this.canvas.addEventListener("mousemove", (e) => {
-      const field = this.getField(e);
-      this.selectedFields.forEach((f) => callback(f, "transparent")); // "green" for
-      // map.ts tests, now I keep transparent for testing spritesheet
-      this.chosenFields.forEach((f) => callback(f, "green"));
-      this.selectedFields = [];
-
-      if (!this.select) {
-        callback(field, "orange");
-        this.selectedFields.push(field);
-      } else {
-        const start = this.selectStart!;
-        const fields = this.fields;
-
-        let startX: number;
-        let endX: number;
-        let startY: number;
-        let endY: number;
-
-        if (field.x > start.x) {
-          startX = start.x;
-          endX = field.x;
-        } else {
-          startX = field.x;
-          endX = start.x;
-        }
-        if (field.y > start.y) {
-          startY = start.y;
-          endY = field.y;
-        } else {
-          startY = field.y;
-          endY = start.y;
-        }
-
-        for (let x = startX; x <= endX; x++) {
-          for (let y = startY; y <= endY; y++) {
-            this.selectedFields.push(fields[x][y]);
-            callback(fields[x][y], "green");
-          }
-        }
-
-        this.fields = fields;
-      }
-    });
+  drawImage(field: Field, image: ImageData) {
+    this.canvas.getContext("2d")!.putImageData(image, field.xPos, field.yPos);
+    this.fields[field.x][field.y].image = image;
   }
 }
-
-// ------ COMMON FUNCTIONALITIES ------
-// select fields
-
-// ----------- MAP CLASS --------------
-// color fields
-// select multiple fields - delete, ctrl, enter
-
-// -------- SPRITESHEET CLASS ---------
-// draw image
-// spritesheet class
-// save state
