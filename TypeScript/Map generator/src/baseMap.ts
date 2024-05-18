@@ -1,4 +1,4 @@
-import imageSource from "/field.png";
+import imageSource from "/cell.png";
 
 export interface Field {
   x: number;
@@ -50,7 +50,6 @@ export default class BaseMap {
     const x = field.xPos;
     const y = field.yPos;
 
-    ctx.filter = "opacity(1)";
     if (field.image) ctx.putImageData(field.image, x, y);
     else ctx.putImageData(this.emptyImage, x, y);
 

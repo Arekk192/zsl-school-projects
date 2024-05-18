@@ -1,26 +1,22 @@
 import BaseMap, { Field } from "./baseMap";
-import imageSource from "/field.png";
-
-interface MapSize {
-  width: number;
-  height: number;
-}
+import imageSource from "/cell.png";
 
 export default class Map extends BaseMap {
   /**
    * @param mapSize - Amount of fields, map is always a square
    * @param size - Size of a single field in px
    */
-  private mapSize: MapSize;
-  readonly canvas: HTMLCanvasElement = document.querySelector("#map_canvas")!;
+  private mapSize: { width: number; height: number };
+  public static readonly canvas: HTMLCanvasElement =
+    document.querySelector("#map_canvas")!;
   private multiSelect: boolean = false;
-
   private selectedFields: Array<Field> = [];
   private select: boolean = false;
   private selectStart: null | Field = null;
+  private selectPoint: { x: number; y: number } | null = null;
   private chosenFields: Array<Field> = [];
 
-  constructor(mapSize: MapSize, size: number = 32) {
+  constructor(mapSize: { width: number; height: number }, size: number = 48) {
     super("map", size);
 
     this.mapSize = mapSize;
@@ -49,7 +45,7 @@ export default class Map extends BaseMap {
       const canvas = document.createElement("canvas");
       const context = canvas.getContext("2d")!;
 
-      context.drawImage(image, 0, 0);
+      context.drawImage(image, 0, 0, size, size);
       const imageData = context.getImageData(0, 0, size, size);
 
       for (let x = 0; x < mapSize.width; x++) {
@@ -78,23 +74,38 @@ export default class Map extends BaseMap {
       }
 
       this.select = true;
+
+      const target = e.target as HTMLElement;
+      const rect = target.getBoundingClientRect();
+      console.log({ x: rect.x, y: rect.y });
+
+      this.selectPoint = { x: e.clientX - rect.x, y: e.clientY - rect.y };
       this.selectStart = this.getField(e);
     });
   }
 
   private addMouseMoveEventListeners() {
-    this.canvas.addEventListener("mousemove", (e) => {
+    const canvas = this.canvas;
+    const ctx = canvas.getContext("2d")!;
+
+    canvas.addEventListener("mousemove", (e) => {
       const field = this.getField(e);
       this.selectedFields.forEach((f) => this.colorImage(f, "transparent"));
       this.chosenFields.forEach((f) => this.colorImage(f, "green"));
       this.selectedFields = [];
 
-      if (!this.select) {
-        this.colorImage(field, "orange");
-        this.selectedFields.push(field);
-      } else {
+      if (this.selectPoint) {
+        // if (!this.select) {
+        //   this.colorImage(field, "orange");
+        //   this.selectedFields.push(field);
+        // } else {
         const start = this.selectStart!;
         const fields = this.fields;
+        const target = e.target as HTMLElement;
+        const rect = target.getBoundingClientRect();
+        const startPoint = this.selectPoint!;
+
+        console.log(startPoint.x, startPoint.y);
 
         const verticies = { x: { start: 0, end: 0 }, y: { start: 0, end: 0 } };
         if (field.x > start.x) verticies.x = { start: start.x, end: field.x };
@@ -104,10 +115,19 @@ export default class Map extends BaseMap {
 
         for (let x = verticies.x.start; x <= verticies.x.end; x++) {
           for (let y = verticies.y.start; y <= verticies.y.end; y++) {
+            // const field = fields[x][y];
             this.selectedFields.push(fields[x][y]);
-            this.colorImage(fields[x][y], "orange");
+            // this.colorImage(fields[x][y], "transparent");
           }
         }
+
+        ctx.fillStyle = "yellow";
+        ctx.fillRect(
+          startPoint.x,
+          startPoint.y,
+          e.clientX - rect.x - startPoint.x,
+          e.clientY - rect.y - startPoint.y
+        );
 
         this.fields = fields;
       }
@@ -118,15 +138,50 @@ export default class Map extends BaseMap {
     this.canvas.addEventListener("mouseup", (e) => {
       const field = this.getField(e);
       const start = this.selectStart!;
-      if (start.x == field.x && start!.y == field.y) {
-        this.chosenFields.push(field);
+
+      if (start.x == field.x && start.y == field.y) {
+        let inChosenFields: boolean = false;
+        this.chosenFields.forEach((cf) => {
+          if (cf.x == field.x && cf.y == field.y) inChosenFields = true;
+        });
+
+        if (inChosenFields) {
+          this.colorImage(field, "transparent");
+          this.chosenFields = this.chosenFields.filter(
+            (f) => f.x != field.x || f.y != field.y
+          );
+        } else {
+          this.colorImage(field, "green");
+          this.chosenFields.push(field);
+        }
       } else {
-        const chosenFields = this.chosenFields;
-        this.selectedFields.forEach((f) => chosenFields.push(f));
+        let chosenFields = this.chosenFields;
+        const selectedFields = this.selectedFields;
+        const duplicatesArray: Array<Field> = [];
+
+        selectedFields.forEach((f) =>
+          chosenFields.forEach((cf) => {
+            if (f.x == cf.x && f.y == cf.y) duplicatesArray.push(f);
+          })
+        );
+        selectedFields.forEach((f) => chosenFields.push(f));
+
+        chosenFields = chosenFields.filter((cf) => {
+          let duplicated: boolean = false;
+          duplicatesArray.forEach((f) => {
+            if (f.x == cf.x && f.y == cf.y) duplicated = true;
+          });
+          return !duplicated;
+        });
+
+        duplicatesArray.forEach((f) => this.colorImage(f, "transparent"));
+        chosenFields.forEach((f) => this.colorImage(f, "green"));
+
         this.chosenFields = chosenFields;
         this.selectedFields = [];
       }
       this.select = false;
+      this.selectPoint = null;
     });
   }
 
@@ -134,6 +189,7 @@ export default class Map extends BaseMap {
     this.canvas.addEventListener("mouseleave", () => {
       this.selectedFields.forEach((f) => this.colorImage(f, "transparent"));
       this.selectedFields = [];
+      this.selectPoint = null;
       this.select = false;
     });
   }
@@ -147,6 +203,12 @@ export default class Map extends BaseMap {
     });
   }
 
+  private addKeyUpEventListener() {
+    document.addEventListener("keyup", (e) => {
+      if (e.key === "Control") this.multiSelect = false;
+    });
+  }
+
   public updateFields(image: ImageData) {
     const fields = this.chosenFields;
     if (fields) fields.forEach((field) => this.drawImage(field, image));
@@ -154,11 +216,13 @@ export default class Map extends BaseMap {
     this.selectedFields = [];
   }
 
-  private addKeyUpEventListener() {
-    document.addEventListener("keyup", (e) => {
-      if (e.key === "Control") this.multiSelect = false;
-    });
+  public downloadCanvas(filename: string) {
+    const link = document.createElement("a");
+    link.href = this.canvas.toDataURL("image/png");
+    link.download = `${filename}.png`;
+    link.click();
   }
 }
 
-// TODO cut seleted fields when multiselect (ctrl)
+// TODO "automat"
+// TODO export data to file

@@ -10,22 +10,21 @@ export default class SpriteSheet extends BaseMap {
     const image = new Image();
     image.src = src;
     image.onload = () => {
+      this.canvas.width = image.width;
+      this.canvas.height = image.height;
       this.canvas
         .getContext("2d")!
         .drawImage(image, 0, 0, 32 * size, 20 * size);
 
-      this.fields = this.getFields();
+      this.setFields();
+      this.addMouseDownEventListeners();
+      this.addMouseMoveEventListeners();
+      this.addMouseLeaveEventListeners();
     };
-    this.canvas.width = image.width;
-    this.canvas.height = image.height;
-
     this.updateState = updateState;
-    this.addMouseDownEventListeners();
-    this.addMouseMoveEventListeners();
-    this.addMouseLeaveEventListeners();
   }
 
-  getFields() {
+  setFields() {
     const canvas = this.canvas;
     const ctx = canvas.getContext("2d")!;
     const size = this.size;
@@ -41,7 +40,7 @@ export default class SpriteSheet extends BaseMap {
       }
       fields.push(fieldsX);
     }
-    return fields;
+    this.fields = fields;
   }
 
   private addMouseMoveEventListeners() {
