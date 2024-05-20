@@ -105,7 +105,7 @@ export default class Map extends BaseMap {
         const rect = target.getBoundingClientRect();
         const startPoint = this.selectPoint!;
 
-        console.log(startPoint.x, startPoint.y);
+        // console.log(startPoint.x, startPoint.y);
 
         const verticies = { x: { start: 0, end: 0 }, y: { start: 0, end: 0 } };
         if (field.x > start.x) verticies.x = { start: start.x, end: field.x };
@@ -222,7 +222,33 @@ export default class Map extends BaseMap {
     link.download = `${filename}.png`;
     link.click();
   }
+
+  public setFields() {
+    this.resetSelect();
+    const fields = this.fields;
+    const ctx = this.canvas.getContext("2d")!;
+    const size = this.size;
+
+    for (let i = 0; i < fields.length; i++) {
+      for (let j = 0; j < fields[0].length; j++) {
+        const field = fields[i][j];
+        const img = ctx.getImageData(field.xPos, field.yPos, size, size);
+        fields[i][j].image = img;
+      }
+    }
+  }
+
+  private resetSelect() {
+    this.selectPoint = null;
+    this.selectStart = null;
+    this.select = false;
+    this.selectedFields = [];
+    this.chosenFields = [];
+  }
 }
 
 // TODO "automat"
 // TODO export data to file
+
+// TODO copy paste
+// TODO undo redo

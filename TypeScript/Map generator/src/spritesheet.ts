@@ -14,7 +14,7 @@ export default class SpriteSheet extends BaseMap {
       this.canvas.height = image.height;
       this.canvas
         .getContext("2d")!
-        .drawImage(image, 0, 0, 32 * size, 20 * size);
+        .drawImage(image, 0, 0, 16 * size, 40 * size);
 
       this.setFields();
       this.addMouseDownEventListeners();
