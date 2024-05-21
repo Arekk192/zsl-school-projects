@@ -49,9 +49,8 @@ export default class BaseMap {
     const size = this.size;
     const x = field.xPos;
     const y = field.yPos;
-
-    if (field.image) ctx.putImageData(field.image, x, y);
-    else ctx.putImageData(this.emptyImage, x, y);
+    const image = field.image ? field.image : this.emptyImage;
+    ctx.putImageData(image, x, y);
 
     ctx.fillStyle = backgroundColor;
     ctx.filter = "opacity(0.75)";

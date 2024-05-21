@@ -21,7 +21,7 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   </div>
 `;
 
-let map = new Map({ width: 10, height: 10 });
+let map = new Map({ width: 16, height: 16 });
 const spritesheet = new SpriteSheet(image, (image: ImageData) =>
   map.updateFields(image)
 );
