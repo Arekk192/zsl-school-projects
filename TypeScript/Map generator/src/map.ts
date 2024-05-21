@@ -240,9 +240,12 @@ export default class Map extends BaseMap {
         }
       } else if (e.ctrlKey && e.key === "v") this.pasting = true;
       else if (e.ctrlKey) this.selectMulti = true;
-      else if (e.key === "Delete") {
+      else if (e.key === "Delete" || e.key === "Escape") {
         this.chosenFields.forEach((f) => this.colorImage(f, "transparent"));
         this.chosenFields = [];
+        this.pasting = false;
+        this.lastPastedFields.forEach((f) => this.colorImage(f, "transparent"));
+        this.lastPastedFields = [];
       }
     });
   }
@@ -274,6 +277,7 @@ export default class Map extends BaseMap {
     this.selectMulti = false;
     this.selectedFields = [];
     this.chosenFields = [];
+    this.lastPastedFields = [];
     this.copyImageData = null;
     this.pasting = false;
 
@@ -292,10 +296,4 @@ export default class Map extends BaseMap {
 }
 
 // TODO "automat"
-
-// TODO copy paste
 // TODO undo redo
-
-// TODO multiselect bug
-
-// if pasting and esc pressed - stop pasting
