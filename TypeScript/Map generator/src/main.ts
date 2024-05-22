@@ -1,4 +1,4 @@
-import image from "/sprites-horizontal.png";
+import image from "/spritemap-horizontal-32.png";
 import SpriteSheet from "./spritesheet";
 import Map from "./map";
 
@@ -8,10 +8,17 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
       <div id="load-map">
         <label for="load-map-button">load a map</label>
         <input type="file" name="image" id="load-map-button" />
-        <!-- <input type="submit" value="" /> -->
       </div>
       <div id="save-map">
         <button role="button" id="save-map-button">save a map</button>
+      </div>
+      <div id="set-automat">
+        <p>automat:</p>
+        <!-- <input type="checkbox" id="checkbox" /> -->
+        <div class="checkbox-wrapper">
+          <input class="tgl tgl-light" id="checkbox" type="checkbox"/>
+          <label class="tgl-btn" for="checkbox">
+        </div>
       </div>
     </header>
     <div style="display: flex; align-items: flex-start; justify-content: center;">
@@ -21,15 +28,17 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   </div>
 `;
 
-let map = new Map({ width: 16, height: 16 });
-const spritesheet = new SpriteSheet(image, (image: ImageData) =>
-  map.updateFields(image)
+let map = new Map({ width: 16, height: 16 }, 32);
+const spritesheet = new SpriteSheet(
+  image,
+  (image: ImageData) => map.updateFields(image),
+  32
 );
 
-document.getElementById("save-map-button")!.onclick = () =>
+(document.querySelector("#save-map-button") as HTMLElement).onclick = () =>
   map.downloadCanvas("canvas");
 
-document.getElementById("load-map-button")!.onchange = (e) => {
+(document.querySelector("#load-map-button") as HTMLElement).onchange = (e) => {
   const input = e.target as HTMLInputElement;
   const file = input.files![0];
   const canvas = document.querySelector("#map_canvas") as HTMLCanvasElement;
@@ -52,3 +61,6 @@ document.getElementById("load-map-button")!.onchange = (e) => {
     reader.readAsDataURL(file);
   }
 };
+
+(document.querySelector("#checkbox") as HTMLInputElement).onchange = (e) =>
+  map.setAutomat((e.target as HTMLInputElement).checked);

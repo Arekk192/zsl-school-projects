@@ -1,4 +1,4 @@
-import imageSource from "/cell.png";
+import imageSource from "/field-32.png";
 
 export interface Field {
   x: number;
@@ -12,7 +12,7 @@ export default class BaseMap {
   /**
    * @param size - Size of a single field in px
    */
-  protected size: number;
+  protected readonly size: number;
   protected readonly canvas: HTMLCanvasElement;
   protected fields: Array<Array<Field>> = [];
   protected emptyImage: ImageData;
