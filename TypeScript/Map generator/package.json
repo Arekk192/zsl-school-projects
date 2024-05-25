@@ -1,5 +1,6 @@
 {
   "name": "map-generator",
+  "author": "Arkadiusz Skupień",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,6 +10,7 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "typedoc": "^0.25.13",
     "typescript": "^5.2.2",
     "vite": "^5.2.0"
   }

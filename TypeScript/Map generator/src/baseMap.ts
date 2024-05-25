@@ -1,4 +1,4 @@
-import imageSource from "/field-32.png";
+import imageSource from "../public/field-32.png";
 
 export interface Field {
   x: number;
@@ -10,7 +10,9 @@ export interface Field {
 
 export default class BaseMap {
   /**
-   * @param size - Size of a single field in px
+   * Base map class containing functions
+   * @param size Size of a single field in px
+   * @param canvas "map" or "spritesheet" - used in querySelector to select canvas by id
    */
   protected readonly size: number;
   protected readonly canvas: HTMLCanvasElement;
@@ -36,6 +38,11 @@ export default class BaseMap {
     };
   }
 
+  /**
+   * Returns field basing on mouse position
+   * @param e MouseEvent (when mousemove, mousedown, mouseup)
+   * @returns field which is under mouse cursor
+   */
   getField(e: MouseEvent) {
     const target = e.target as HTMLElement;
     const rect = target.getBoundingClientRect();
@@ -44,6 +51,12 @@ export default class BaseMap {
     return this.fields[x][y];
   }
 
+  /**
+   * Colors the field to color pasted as an argument
+   * @param field Field which should be colored
+   * @param backgroundColor background color to field in canvas (will be applied with opacity 0.75)
+   * @returns field which is under mouse cursor
+   */
   colorImage(field: Field, backgroundColor: string) {
     const ctx = this.canvas.getContext("2d")!;
     const size = this.size;
@@ -57,6 +70,11 @@ export default class BaseMap {
     ctx.fillRect(x, y, size, size);
   }
 
+  /**
+   * Changes the field's image
+   * @param field field which should be changed
+   * @param image image to apply
+   */
   drawImage(field: Field, image: ImageData) {
     this.canvas.getContext("2d")!.putImageData(image, field.xPos, field.yPos);
     this.fields[field.x][field.y].image = image;

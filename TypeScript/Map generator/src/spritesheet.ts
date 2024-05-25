@@ -24,6 +24,9 @@ export default class SpriteSheet extends BaseMap {
     this.updateState = updateState;
   }
 
+  /**
+   * Sets fields basing on spritesheet image
+   */
   setFields() {
     const canvas = this.canvas;
     const ctx = canvas.getContext("2d")!;
@@ -43,6 +46,9 @@ export default class SpriteSheet extends BaseMap {
     this.fields = fields;
   }
 
+  /**
+   * Adds mousemove event logic
+   */
   private addMouseMoveEventListeners() {
     this.canvas.addEventListener("mousemove", (e) => {
       if (this.cursor) this.colorImage(this.cursor, "transparent");
@@ -52,6 +58,9 @@ export default class SpriteSheet extends BaseMap {
     });
   }
 
+  /**
+   * Adds mousedown event logic
+   */
   private addMouseDownEventListeners() {
     this.canvas.addEventListener("mousedown", (e) => {
       const field = this.getField(e);
@@ -59,6 +68,9 @@ export default class SpriteSheet extends BaseMap {
     });
   }
 
+  /**
+   * Adds mouseleave event logic
+   */
   private addMouseLeaveEventListeners() {
     this.canvas.addEventListener("mouseleave", () => {
       this.colorImage(this.cursor!, "transparent");

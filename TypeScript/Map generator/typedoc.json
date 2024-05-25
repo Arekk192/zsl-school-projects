@@ -1,0 +1,11 @@
+{
+  "entryPoints": ["src/main.ts"],
+  "out": "documentation",
+  "name": "Map generator",
+  "exclude": ["**/__tests__/**", "**/*.spec.ts"],
+  "tsconfig": "tsconfig.json",
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeExternals": true,
+  "readme": "README.md"
+}

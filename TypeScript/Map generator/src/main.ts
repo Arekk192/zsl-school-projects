@@ -35,6 +35,8 @@ const spritesheet = new SpriteSheet(
   32
 );
 
+spritesheet.setFields();
+
 (document.querySelector("#save-map-button") as HTMLElement).onclick = () =>
   map.downloadCanvas("canvas");
 

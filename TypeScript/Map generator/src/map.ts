@@ -42,6 +42,9 @@ export default class Map extends BaseMap {
     this.addKeyUpEventListener();
   }
 
+  /**
+   * Generates fields for canvas
+   */
   private generateFields() {
     const ctx = this.canvas.getContext("2d")!;
     const fields: Array<Array<Field>> = [];
@@ -74,6 +77,9 @@ export default class Map extends BaseMap {
     };
   }
 
+  /**
+   * Adds mousedown event logic
+   */
   private addMouseDownEventListeners() {
     this.canvas.addEventListener("mousedown", (e) => {
       if (!this.pasting) {
@@ -90,6 +96,9 @@ export default class Map extends BaseMap {
     });
   }
 
+  /**
+   * Adds mousemove event logic
+   */
   private addMouseMoveEventListeners() {
     const canvas = this.canvas;
     const ctx = canvas.getContext("2d")!;
@@ -152,6 +161,9 @@ export default class Map extends BaseMap {
     });
   }
 
+  /**
+   * Adds mouseup event logic
+   */
   private addMouseUpEventListeners() {
     this.canvas.addEventListener("mouseup", (e) => {
       if (this.pasting) {
@@ -208,6 +220,9 @@ export default class Map extends BaseMap {
     });
   }
 
+  /**
+   * Adds mouseleave event logic
+   */
   private addMouseLeaveEventListeners() {
     this.canvas.addEventListener("mouseleave", () => {
       this.selectingFields.forEach((f) => this.colorImage(f, "transparent"));
@@ -217,6 +232,9 @@ export default class Map extends BaseMap {
     });
   }
 
+  /**
+   * Adds keydown event logic
+   */
   private addKeyDownEventListener() {
     document.addEventListener("keydown", (e) => {
       if (e.ctrlKey && e.key === "c") {
@@ -278,6 +296,9 @@ export default class Map extends BaseMap {
     });
   }
 
+  /**
+   * Adds keyup event logic
+   */
   private addKeyUpEventListener() {
     document.addEventListener("keyup", (e) => {
       if (e.ctrlKey) this.selectMulti = false;
@@ -285,6 +306,10 @@ export default class Map extends BaseMap {
     });
   }
 
+  /**
+   * Changes selected fields image background
+   * @param image image which will be applied for all selected fields
+   */
   public updateFields(image: ImageData) {
     if (this.selectedFields.length) {
       const fields = this.selectedFields;
@@ -317,6 +342,9 @@ export default class Map extends BaseMap {
     }
   }
 
+  /**
+   * Sets history as current map state
+   */
   private setHistory() {
     const canvas = this.canvas;
     const ctx = canvas.getContext("2d")!;
@@ -328,6 +356,9 @@ export default class Map extends BaseMap {
     this.historyState++;
   }
 
+  /**
+   * Sets fields with images displayed on canvas when calling this function
+   */
   public setFields() {
     this.selectData = null;
     this.selectMulti = false;
@@ -349,6 +380,9 @@ export default class Map extends BaseMap {
     }
   }
 
+  /**
+   * Downloads canvas as png image
+   */
   public downloadCanvas(filename: string) {
     const link = document.createElement("a");
     link.href = this.canvas.toDataURL("image/png");
@@ -356,6 +390,10 @@ export default class Map extends BaseMap {
     link.click();
   }
 
+  /**
+   * Updates automat value in map
+   * @param value value which will be applied
+   */
   public setAutomat(value: boolean) {
     this.automat = value;
   }
