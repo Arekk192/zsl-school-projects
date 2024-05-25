@@ -1,9 +1,9 @@
-# art-viewer
-
 App for generating new maps from spritesheet
+<br />
+<br />
 
-## Installation
+### Installation & usage
 
 ```
-npm install
+npm install && npm run dev
 ```

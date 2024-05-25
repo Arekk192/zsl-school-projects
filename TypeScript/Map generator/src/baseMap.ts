@@ -1,4 +1,4 @@
-import imageSource from "../public/field-32.png";
+import imageSource from "/field-32.png";
 
 export interface Field {
   x: number;
@@ -8,7 +8,13 @@ export interface Field {
   image: ImageData | null;
 }
 
-export default class BaseMap {
+export interface BaseMapI {
+  getField(e: MouseEvent): Field;
+  colorImage(field: Field, backgroundColor: string): void;
+  drawImage(field: Field, image: ImageData): void;
+}
+
+export default class BaseMap implements BaseMapI {
   /**
    * Base map class containing functions
    * @param size Size of a single field in px
@@ -43,7 +49,7 @@ export default class BaseMap {
    * @param e MouseEvent (when mousemove, mousedown, mouseup)
    * @returns field which is under mouse cursor
    */
-  getField(e: MouseEvent) {
+  public getField(e: MouseEvent) {
     const target = e.target as HTMLElement;
     const rect = target.getBoundingClientRect();
     const x = Math.floor((e.clientX - rect.x) / this.size);
@@ -57,7 +63,7 @@ export default class BaseMap {
    * @param backgroundColor background color to field in canvas (will be applied with opacity 0.75)
    * @returns field which is under mouse cursor
    */
-  colorImage(field: Field, backgroundColor: string) {
+  public colorImage(field: Field, backgroundColor: string) {
     const ctx = this.canvas.getContext("2d")!;
     const size = this.size;
     const x = field.xPos;
@@ -75,7 +81,7 @@ export default class BaseMap {
    * @param field field which should be changed
    * @param image image to apply
    */
-  drawImage(field: Field, image: ImageData) {
+  public drawImage(field: Field, image: ImageData) {
     this.canvas.getContext("2d")!.putImageData(image, field.xPos, field.yPos);
     this.fields[field.x][field.y].image = image;
   }

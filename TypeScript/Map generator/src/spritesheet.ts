@@ -1,6 +1,10 @@
-import BaseMap, { Field } from "./baseMap";
+import BaseMap, { BaseMapI, Field } from "./baseMap";
 
-export default class SpriteSheet extends BaseMap {
+interface SpriteSheetI extends BaseMapI {
+  setFields(): void;
+}
+
+export default class SpriteSheet extends BaseMap implements SpriteSheetI {
   private cursor: Field | null = null;
   private updateState: (image: ImageData) => void;
 
@@ -27,7 +31,7 @@ export default class SpriteSheet extends BaseMap {
   /**
    * Sets fields basing on spritesheet image
    */
-  setFields() {
+  public setFields() {
     const canvas = this.canvas;
     const ctx = canvas.getContext("2d")!;
     const size = this.size;
