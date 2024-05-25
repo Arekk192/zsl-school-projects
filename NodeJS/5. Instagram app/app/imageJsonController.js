@@ -4,7 +4,7 @@ import { photos, setPhotos } from "./model.js";
 // 201 - POST OK
 // 202 - DELETE OK
 
-const photoJsonController = {
+const jsonController = {
   getAllPhotos() {
     return photos;
   },
@@ -22,4 +22,4 @@ const photoJsonController = {
   },
 };
 
-export default photoJsonController;
+export default jsonController;

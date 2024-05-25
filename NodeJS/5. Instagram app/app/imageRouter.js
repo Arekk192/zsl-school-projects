@@ -1,25 +1,25 @@
-import photoFileController from "./photoFileController.js";
-import photoJsonController from "./photoJsonController.js";
+import fileController from "./imageFileController.js";
+import jsonController from "./imageJsonController.js";
 
 const applicationJsonHeader = {
   "Content-type": "application/json;charset=utf-8",
 };
 
-const router = async (req, res) => {
+const imageRouter = async (req, res) => {
   if (req.method === "GET" && req.url === "/api/photos") {
     res.writeHead(200, applicationJsonHeader);
-    res.end(JSON.stringify(photoJsonController.getAllPhotos()));
+    res.end(JSON.stringify(jsonController.getAllPhotos()));
   } else if (req.method === "GET" && req.url.match(/\/api\/photos\/([0-9]+)/)) {
     const id = req.url.replace("/api/photos/", "");
-    const photo = photoJsonController.getPhoto(id);
+    const photo = jsonController.getPhoto(id);
 
     res.writeHead(photo.status, applicationJsonHeader);
     res.end(JSON.stringify(photo));
   } else if (req.method === "POST" && req.url === "/api/photos") {
-    const fileResponse = await photoFileController.saveFile(req);
+    const fileResponse = await fileController.saveFile(req);
 
     if (!fileResponse.error) {
-      photoJsonController.uploadPhoto(fileResponse);
+      jsonController.uploadPhoto(fileResponse);
       res.writeHead(200, applicationJsonHeader);
       res.end(JSON.stringify(fileResponse));
     } else {
@@ -32,18 +32,18 @@ const router = async (req, res) => {
     req.url.match(/\/api\/photos\/([0-9]+)/)
   ) {
     const id = req.url.replace("/api/photos/", "");
-    const jsonResponse = photoJsonController.getPhoto(id);
+    const jsonResponse = jsonController.getPhoto(id);
     // ^ here from get I got data.status (200 or 404)
 
     if (jsonResponse.status === 200) {
       const file = jsonResponse;
-      const fileResponse = await photoFileController.deleteFile(file);
+      const fileResponse = await fileController.deleteFile(file);
 
       if (fileResponse.error) {
         res.writeHead(404, applicationJsonHeader);
-        res.end(JSON.stringify({ message: fileResponse.error }));
+        res.end(JSON.stringify({ error: fileResponse.error }));
       } else {
-        photoJsonController.deletePhoto(id);
+        jsonController.deletePhoto(id);
         res.writeHead(200, applicationJsonHeader);
         res.end(JSON.stringify(fileResponse));
       }
@@ -53,12 +53,12 @@ const router = async (req, res) => {
     }
 
     // TODO data.status variable should be here, not in
-    // photoFileController.js
+    // fileController.js
 
     // TODO rewrite all of that json modifications from fileCtrl
 
     // if (fileResponse.message) {
-    //   photoJsonController.delete(fileResponse);
+    //   jsonController.delete(fileResponse);
   }
   // else if (
   //   req.method === "PATCH" &&
@@ -66,4 +66,26 @@ const router = async (req, res) => {
   // ) {}
 };
 
-export default router;
+export default imageRouter;
+
+// ---- TODO list ----
+
+// -> ZMIANA STRUKTURY SERWERA
+//
+// |__ app
+// |   |__ tagsController.js   // modyfikacje jsona opisującego stan tagów
+// |   |__ tagsRouter.js   // router tylko do api tagów
+// |   |__ imageRouter.js   // router tylko do api imagów (router z poprzedniej części aplikacji)
+//
+//
+// -> TAGS API
+//
+// -> PATCH PHOTO
+// Po zrobieniu tags API patch do edycji danych
+// (tagi zdjecia)
+//
+//
+// -> filtry dla zdjec sharp
+//
+// USERS API
+// ...

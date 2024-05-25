@@ -5,7 +5,7 @@ GET http://localhost:3000/api/photos HTTP/1.1
 GET http://localhost:3000/api/photos/1715931585782 HTTP/1.1
 
 ### DELETE - delete photo by id
-DELETE http://localhost:3000/api/photos/1715932228071 HTTP/1.1
+DELETE http://localhost:3000/api/photos/1716533214102 HTTP/1.1
 
 ### PATCH - update photo by id
 PATCH http://localhost:3000/api/photos HTTP/1.1

@@ -4,7 +4,7 @@ import path, { resolve } from "path";
 
 const __dirname = path.resolve();
 
-const photoFileController = {
+const fileController = {
   saveFile: async (req) => {
     return new Promise((resolve, reject) => {
       try {
@@ -72,11 +72,12 @@ const photoFileController = {
     return new Promise((resolve, reject) => {
       try {
         if (!fs.existsSync(file.url)) {
-          console.log("75 line filectrl.js", {
-            status: file.status,
-            message: file.message,
-          });
-          // TODO here
+          // console.log(file);
+          // console.log("75 line filectrl.js", {
+          //   status: file.status,
+          //   message: file.message,
+          // });
+          // // TODO here
           resolve({ error: `file ${file.url} not found` });
         } else {
           fs.rm(file.url, (err) => {
@@ -94,4 +95,4 @@ const photoFileController = {
   },
 };
 
-export default photoFileController;
+export default fileController;

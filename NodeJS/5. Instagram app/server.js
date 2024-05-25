@@ -1,6 +1,12 @@
+import imageRouter from "./app/imageRouter";
 import { createServer } from "http";
-import router from "./app/router.js";
 const PORT = 3000;
-createServer((req, res) => router(req, res)).listen(PORT, () =>
-  console.log(`http://localhost:${PORT}`)
-);
+
+createServer(async (req, res) => {
+  if (req.url.search("/api/photos") != -1) {
+    await imageRouter(req, res);
+  }
+  // else if (req.url.search("/api/tags") != -1) {
+  //   await tagsRouter(req,res)
+  // }
+}).listen(PORT, () => console.log(`http://localhost:${PORT}`));

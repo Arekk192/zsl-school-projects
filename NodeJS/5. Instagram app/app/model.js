@@ -16,4 +16,40 @@ let photos = [];
 
 const setPhotos = (value) => (photos = value);
 
-export { setPhotos, photos };
+let tags = [
+  "#love",
+  "#instagood",
+  "#fashion",
+  "#instagram",
+  "#photooftheday",
+  "#art",
+  "#photography",
+  "#beautiful",
+  "#nature",
+  "#picoftheday",
+  "#travel",
+  "#happy",
+  "#cute",
+  "#instadaily",
+  "#style",
+  "#tbt",
+  "#repost",
+  "#followme",
+  "#summer",
+  "#reels",
+  "#like4like",
+  "#beauty",
+  "#fitness",
+  "#food",
+];
+
+// tags json
+// [
+//     "#love",
+//     "#instagood",
+//     "#fashion",
+//     ...
+//     ...
+// ]
+
+export { setPhotos, photos, tags };
