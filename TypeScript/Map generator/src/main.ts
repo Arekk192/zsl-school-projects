@@ -25,6 +25,7 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
       <canvas style="margin: 16px;" id="spritesheet_canvas"></canvas>
       <canvas style="margin: 16px;" id="map_canvas"></canvas>
     </div>
+    <div id="menu"><div></div></div>
   </div>
 `;
 
@@ -40,7 +41,8 @@ spritesheet.setFields();
 (document.querySelector("#save-map-button") as HTMLElement).onclick = () =>
   map.downloadCanvas("canvas");
 
-(document.querySelector("#load-map-button") as HTMLElement).onchange = (e) => {
+const input = document.querySelector("#load-map-button") as HTMLElement;
+input.onchange = (e) => {
   const input = e.target as HTMLInputElement;
   const file = input.files![0];
   const canvas = document.querySelector("#map_canvas") as HTMLCanvasElement;
@@ -64,5 +66,30 @@ spritesheet.setFields();
   }
 };
 
-(document.querySelector("#checkbox") as HTMLInputElement).onchange = (e) =>
+(document.querySelector("#checkbox") as HTMLInputElement).onchange = (e) => {
   map.setAutomat((e.target as HTMLInputElement).checked);
+};
+
+[
+  { text: "undo", key: "ctrl + z", func: () => map.undo() },
+  { text: "redo", key: "ctrl + y", func: () => map.redo() },
+  { text: "cut", key: "ctrl + x", func: () => map.copy(true) },
+  { text: "copy", key: "ctrl + c", func: () => map.copy() },
+  { text: "paste", key: "ctrl + v", func: () => map.paste() },
+  { text: "delete", key: "del", func: () => map.clearFields() },
+  {
+    text: "save to file",
+    key: "ctrl + s",
+    func: () => map.downloadCanvas("canvas"),
+  },
+  { text: "load data from file", key: "ctrl + l", func: () => input.click() },
+].forEach((el) => {
+  const menuContainer = document.querySelector("#menu > div")!;
+  const menuItem = document.createElement("div");
+  menuItem.innerHTML = `<p>${el.text}</p><p>${el.key}</p>`;
+  menuItem.addEventListener("click", () => {
+    el.func();
+    map.hideMenu();
+  });
+  menuContainer.appendChild(menuItem);
+});

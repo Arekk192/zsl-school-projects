@@ -2,8 +2,14 @@ import BaseMap, { BaseMapI, Field } from "./baseMap";
 import imageSource from "/field-32.png";
 
 interface MapI extends BaseMapI {
-  updateFields(image: ImageData): void;
   setFields(): void;
+  showMenu(): void;
+  hideMenu(): void;
+  copy(): void;
+  paste(): void;
+  undo(): void;
+  redo(): void;
+  updateFields(image: ImageData): void;
   downloadCanvas(filename: string): void;
   setAutomat(value: boolean): void;
 }
@@ -89,11 +95,10 @@ export default class Map extends BaseMap implements MapI {
   private addMouseDownEventListener() {
     this.canvas.addEventListener("mousedown", (e) => {
       if (!this.pasting) {
-        if (!this.selectMulti) {
+        if (!this.selectMulti && e.button !== 2) {
           this.selectedFields.forEach((f) => this.colorImage(f, "transparent"));
           this.selectedFields = [];
         }
-
         const target = e.target as HTMLElement;
         const rect = target.getBoundingClientRect();
         const point = { x: e.clientX - rect.x, y: e.clientY - rect.y };
@@ -111,11 +116,10 @@ export default class Map extends BaseMap implements MapI {
 
     canvas.addEventListener("mousemove", (e) => {
       const field = this.getField(e);
-      this.selectingFields.forEach((f) => this.colorImage(f, "transparent"));
       this.selectedFields.forEach((f) => this.colorImage(f, "green"));
       this.selectingFields = [];
 
-      if (this.pasting) {
+      if (this.pasting && this.copyImageData) {
         const canvas = this.canvas;
         const ctx = canvas.getContext("2d")!;
         const fields = this.copyImageData!;
@@ -124,8 +128,6 @@ export default class Map extends BaseMap implements MapI {
 
         this.lastPastedFields.forEach((f) => this.colorImage(f, "transparent"));
         this.lastPastedFields = [];
-
-        console.log("paste");
 
         for (let x = 0; x < fields.length; x++) {
           for (let y = 0; y < fields[0].length; y++) {
@@ -159,9 +161,11 @@ export default class Map extends BaseMap implements MapI {
           for (let y = verticies.y.start; y <= verticies.y.end; y++)
             this.selectingFields.push(fields[x][y]);
 
+        this.selectingFields.forEach((f) => this.colorImage(f, "green"));
+
+        ctx.fillStyle = "yellow";
         const width = e.clientX - rect.x - point.x;
         const height = e.clientY - rect.y - point.y;
-        ctx.fillStyle = "yellow";
         ctx.fillRect(point.x, point.y, width, height);
 
         this.fields = fields;
@@ -241,10 +245,10 @@ export default class Map extends BaseMap implements MapI {
   }
 
   /**
-   * Handles copy (cut)
+   * Handles copy (cut) event
    * @param [cut=false] says if fields should be cut
    */
-  private copy(cut: boolean = false) {
+  public copy(cut: boolean = false) {
     const selectedFields = this.selectedFields;
     if (selectedFields.length) {
       const coords = {
@@ -292,9 +296,9 @@ export default class Map extends BaseMap implements MapI {
   }
 
   /**
-   * Handles undo
+   * Handles undo event
    */
-  undo() {
+  public undo() {
     if (this.historyState > 0) {
       const canvas = this.canvas;
       const ctx = canvas.getContext("2d")!;
@@ -305,9 +309,9 @@ export default class Map extends BaseMap implements MapI {
   }
 
   /**
-   * Handles redo
+   * Handles redo event
    */
-  redo() {
+  public redo() {
     if (this.historyState < this.history.length - 1) {
       const canvas = this.canvas;
       const ctx = canvas.getContext("2d")!;
@@ -318,22 +322,77 @@ export default class Map extends BaseMap implements MapI {
   }
 
   /**
+   * Sets fields as this.emptyImage
+   */
+  public clearFields() {
+    this.selectedFields.forEach((f) => this.drawImage(f, this.emptyImage));
+    this.selectedFields = [];
+  }
+
+  /**
+   * Handles paste event
+   */
+  public paste() {
+    this.pasting = true;
+  }
+
+  /**
    * Adds keydown event logic
    */
   private addKeyDownEventListener() {
     document.addEventListener("keydown", (e) => {
-      if (e.ctrlKey && e.key === "c") this.copy();
-      else if (e.ctrlKey && e.key === "x") this.copy(true);
-      else if (e.ctrlKey && e.key === "v" && this.copyImageData)
-        this.pasting = true;
-      else if (e.ctrlKey && e.key === "z") this.undo();
-      else if (e.ctrlKey && e.key === "y") this.redo();
-      else if (e.ctrlKey) this.selectMulti = true;
-      else if (e.key === "Delete" || e.key === "Escape") {
-        this.selectedFields.forEach((f) => this.drawImage(f, this.emptyImage));
-        this.selectedFields = [];
+      e.preventDefault();
+      const isMacOS = /Mac|iPod|iPhone|iPad/.test(navigator.userAgent);
+
+      if (e.key === "Delete") this.clearFields();
+      else if (e.key === "Escape") this.hideMenu();
+      else if (isMacOS && e.metaKey) {
+        if (e.key === "c") this.copy();
+        else if (e.key === "x") this.copy(true);
+        else if (e.key === "v" && this.copyImageData) this.paste();
+        else if (e.key === "z") this.undo();
+        else if (e.key === "y") this.redo();
+        else if (e.key === "s") this.downloadCanvas("canvas");
+        else if (e.key === "l") {
+          const input = "#load-map-button";
+          const inputhtml = document.querySelector(input) as HTMLInputElement;
+          inputhtml.click();
+        } else this.selectMulti = true;
+      } else if (e.ctrlKey) {
+        if (e.key === "c") this.copy();
+        else if (e.key === "x") this.copy(true);
+        else if (e.key === "v" && this.copyImageData) this.paste();
+        else if (e.key === "z") this.undo();
+        else if (e.key === "y") this.redo();
+        else if (e.key === "s") this.downloadCanvas("canvas");
+        else if (e.key === "l") {
+          const input = "#load-map-button";
+          const inputhtml = document.querySelector(input) as HTMLInputElement;
+          inputhtml.click();
+        } else this.selectMulti = true;
       }
     });
+
+    document.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+      this.showMenu();
+    });
+  }
+
+  /**
+   * Shows menu
+   */
+  public showMenu() {
+    const menu = document.querySelector("#menu") as HTMLDivElement;
+    menu.style.display = "flex";
+  }
+
+  /**
+   * Hides menu
+   */
+  public hideMenu() {
+    const menu = document.querySelector("#menu") as HTMLDivElement;
+    menu.style.display = "none";
   }
 
   /**

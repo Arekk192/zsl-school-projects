@@ -192,6 +192,67 @@
       .checkbox-wrapper .tgl-light:checked + .tgl-btn {
         background: #0fc23e;
       }
+
+      #menu {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 2;
+        background: #252525;
+        opacity: 0.85;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #menu > div {
+        border: 1px solid black;
+        border-radius: 12px;
+        overflow: hidden;
+      }
+
+      #menu > div > div {
+        width: 400px;
+        height: 64px;
+        border: 1px solid black;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 12px;
+      }
+
+      #menu > div > div:hover {
+        background: rgb(0, 43, 111);
+        background: linear-gradient(
+          90deg,
+          rgba(0, 43, 111, 1) 0%,
+          rgba(23, 61, 167, 1) 25%,
+          rgba(0, 212, 255, 1) 100%
+        );
+      }
+
+      #menu > div > div:hover > p {
+        color: #f0f0f0;
+      }
+
+      #menu > div > div:not(:hover) {
+        background: #f0f0f0;
+      }
+
+      #menu > div > div:not(:hover) > p {
+        color: #111;
+      }
+
+      #menu > div > div > p {
+        font-size: 24px;
+        font-family: "Jaro", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 400;
+        font-style: normal;
+        user-select: none;
+      }
     </style>
   </head>
   <body>
