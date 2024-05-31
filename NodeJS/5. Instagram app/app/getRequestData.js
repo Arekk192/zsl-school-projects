@@ -1,11 +1,11 @@
 const getRequestData = async (req) => {
-  return new Promise((res, rej) => {
+  return new Promise((resolve, reject) => {
     try {
       let body = "";
       req.on("data", (part) => (body += part.toString()));
-      req.on("end", () => res(body));
+      req.on("end", () => resolve(body));
     } catch (error) {
-      rej(error);
+      reject(error);
     }
   });
 };

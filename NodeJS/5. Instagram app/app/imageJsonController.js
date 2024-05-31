@@ -10,9 +10,7 @@ const jsonController = {
   },
   getPhoto(id) {
     const photo = photos.filter((el) => el.id == id);
-    return photo.length === 1
-      ? { status: 200, ...photo[0] }
-      : { status: 404, message: `photo with id ${id} not found` };
+    return photo.length === 1 ? photo[0] : null;
   },
   uploadPhoto(photo) {
     photos.push(photo);

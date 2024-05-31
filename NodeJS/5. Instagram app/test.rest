@@ -2,19 +2,17 @@
 GET http://localhost:3000/api/photos HTTP/1.1
 
 ### GET - get 1 photo by id
-GET http://localhost:3000/api/photos/1715931585782 HTTP/1.1
+GET http://localhost:3000/api/photos/1717149056513 HTTP/1.1
 
 ### DELETE - delete photo by id
-DELETE http://localhost:3000/api/photos/1716533214102 HTTP/1.1
+DELETE http://localhost:3000/api/photos/1717149234043 HTTP/1.1
 
 ### PATCH - update photo by id
 PATCH http://localhost:3000/api/photos HTTP/1.1
-content-type: application/json
+Content-Type: application/json
 
 {
-    "id": 10,
-    "a": 111111,
-    "b": 222222
+  "tags": ["tag1", "twojastara"]
 }
 
 ### POST - upload new photo
@@ -33,3 +31,37 @@ Content-Type: text/plain
 
 album
 ------FormBoundary1234
+
+
+### pobranie wszystkich tagów bez konwersji na obiekty
+GET http://localhost:3000/api/tags/raw 
+
+### pobranie wszystkich tagów z konwersją na obiekty
+GET http://localhost:3000/api/tags 
+
+### pobranie jednego taga
+GET http://localhost:3000/api/tags/2
+
+### utworzenie nowego taga
+POST http://localhost:3000/api/tags 
+Content-Type: application/json
+
+{
+  "name": "nowytag",
+  "popularity": 0
+}
+
+### aktualizacja danych zdjęcia o nowy tag
+PATCH http://localhost:3000/api/photos/tags
+Content-Type: application/json
+
+{
+  "photo_id": 1717157435332,
+  "tags": ["tag1", "twojastara"]
+}
+
+### aktualizacja danych zdjęcia o tablicę nowych tag-ów
+PATCH http://localhost:3000/api/photos/tags/mass 
+
+### pobranie tagów danego zdjęcia
+GET http://localhost:3000/api/photos/tags/12345 

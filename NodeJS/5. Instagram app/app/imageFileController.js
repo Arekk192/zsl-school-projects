@@ -9,12 +9,10 @@ const fileController = {
     return new Promise((resolve, reject) => {
       try {
         const uploadDir = path.join(__dirname, "uploads");
-        const form = formidable({
+        formidable({
           uploadDir: uploadDir,
           keepExtensions: true,
-        });
-
-        form.parse(req, async (err, fields, files) => {
+        }).parse(req, async (err, fields, files) => {
           if (err) resolve({ error: err.message });
           else {
             const file = files.file;
@@ -39,6 +37,7 @@ const fileController = {
                         originalName: file.name,
                         url: newName,
                         lastChange: "original",
+                        tags: [],
                         history: [{ status: "original", timestamp: date }],
                       });
                     }
@@ -56,6 +55,7 @@ const fileController = {
                     originalName: file.name,
                     url: newName,
                     lastChange: "original",
+                    tags: [],
                     history: [{ status: "original", timestamp: date }],
                   });
                 }
@@ -71,23 +71,16 @@ const fileController = {
   deleteFile: async (file) => {
     return new Promise((resolve, reject) => {
       try {
-        if (!fs.existsSync(file.url)) {
-          // console.log(file);
-          // console.log("75 line filectrl.js", {
-          //   status: file.status,
-          //   message: file.message,
-          // });
-          // // TODO here
+        if (!fs.existsSync(file.url))
           resolve({ error: `file ${file.url} not found` });
-        } else {
+        else
           fs.rm(file.url, (err) => {
             if (err) resolve({ error: err });
             else {
               const message = `file with id ${file.id} deleted successfully`;
-              resolve({ status: 201, message: message });
+              resolve({ message });
             }
           });
-        }
       } catch (error) {
         reject(error);
       }

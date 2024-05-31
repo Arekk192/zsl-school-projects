@@ -1,34 +1,32 @@
-import { tags } from "./model";
+import getRequestData from "./getRequestData.js";
+import tagsController from "./tagsController.js";
 
-// GET /api/tags/raw
-// - pobranie wszystkich tagów bez konwersji na obiekty
-//
-// GET /api/tags
-// - pobranie wszystkich tagów z konwersją na obiekty
-//
-// GET /api/tags/1
-// - pobranie jednego taga
-//
-// POST /api/tags
-// - utworzenie nowego taga
-//
-// -------
-// PATCH /api/photos/tags
-// - aktualizacja danych zdjęcia o nowy tag
-//
-// PATCH /api/photos/tags/mass
-// - aktualizacja danych zdjęcia o tablicę nowych tag-ów
-//
-// GET /api/photos/tags/12345
-// - pobranie tagów danego zdjęcia
-
+const applicationJson = "application/json;charset=utf-8";
 const tagsRouter = async (req, res) => {
-  if (req.method === "GET" && req.url === "/api/tags") {
+  if (req.method === "GET" && req.url === "/api/tags/raw") {
+    res.writeHead(200, { "Content-type": applicationJson });
+    res.end(JSON.stringify(tagsController.getAllRawTags()));
+  } else if (req.method === "GET" && req.url === "/api/tags") {
+    res.writeHead(200, { "Content-type": applicationJson });
+    res.end(JSON.stringify(tagsController.getAllTags()));
   } else if (req.method === "GET" && req.url.match(/\/api\/tags\/([0-9]+)/)) {
+    const id = req.url.replace("/api/tags/", "");
+    const tag = tagsController.getTag(id);
+    if (tag) {
+      res.writeHead(200, { "Content-type": applicationJson });
+      res.end(JSON.stringify(tag));
+    } else {
+      res.writeHead(400, { "Content-type": applicationJson });
+      res.end(JSON.stringify({ message: "nie znaleziono" }));
+    }
   } else if (req.method === "POST" && req.url === "/api/tags") {
-  } else if (
-    req.method === "DELETE" &&
-    req.url.match(/\/api\/tags\/([0-9]+)/)
-  ) {
+    const requestData = JSON.parse(await getRequestData(req));
+    tagsController.createNewTag(requestData);
+
+    // TODO tag istnieje
+    res.writeHead(201, { "Content-type": applicationJson });
+    res.end(JSON.stringify({ message: `dodano tag #${requestData.name}` }));
   }
 };
+
+export default tagsRouter;
