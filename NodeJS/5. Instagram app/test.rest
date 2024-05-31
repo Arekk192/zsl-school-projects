@@ -56,12 +56,18 @@ PATCH http://localhost:3000/api/photos/tags
 Content-Type: application/json
 
 {
-  "photo_id": 1717157435332,
-  "tags": ["tag1", "twojastara"]
+  "photo_id": 1717170195004,
+  "tag": "tag_jakis"
 }
 
 ### aktualizacja danych zdjęcia o tablicę nowych tag-ów
 PATCH http://localhost:3000/api/photos/tags/mass 
+Content-Type: application/json
+
+{
+  "photo_id": 1717170195004,
+  "tags": ["tag1", "twojastara"]
+}
 
 ### pobranie tagów danego zdjęcia
-GET http://localhost:3000/api/photos/tags/12345 
+GET http://localhost:3000/api/photos/tags/1717170195004

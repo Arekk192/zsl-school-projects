@@ -1,15 +1,7 @@
 import fileController from "./imageFileController.js";
 import jsonController from "./imageJsonController.js";
 import getRequestData from "./getRequestData.js";
-
-// PATCH /api/photos/tags
-// - aktualizacja danych zdjęcia o nowy tag
-//
-// PATCH /api/photos/tags/mass
-// - aktualizacja danych zdjęcia o tablicę nowych tag-ów
-//
-// GET /api/photos/tags/12345
-// - pobranie tagów danego zdjęcia
+import tagsController from "./tagsController.js";
 
 const applicationJson = "application/json;charset=utf-8";
 const imageRouter = async (req, res) => {
@@ -61,34 +53,70 @@ const imageRouter = async (req, res) => {
       res.end(JSON.stringify({ message: `photo with id ${id} not found` }));
     }
   } else if (req.method === "PATCH" && req.url === "/api/photos/tags") {
-    const requestData = JSON.parse(await getRequestData(req));
-    const photo = jsonController.getPhoto(requestData["photo_id"]);
+    const reqData = JSON.parse(await getRequestData(req));
+    const photo = jsonController.getPhoto(reqData["photo_id"]);
 
     if (photo) {
-      jsonController.addTagsToPhoto(photo, requestData.tags);
+      const tag = reqData.tag[0] == "#" ? reqData.tag : `#${reqData.tag}`;
+      const allTags = tagsController.getAllTags();
+
+      if (!allTags.includes(tag))
+        tagsController.createNewTag({ name: tag, popularity: 0 });
+
+      jsonController.addTagsToPhoto(photo.id, [tag]);
+
+      const message = `tag ${tag} added to photo ${photo.id}`;
       res.writeHead(200, { "Content-type": applicationJson });
-      res.end(JSON.stringify({ message: "xd" }));
+      res.end(JSON.stringify({ message }));
+    } else {
+      const message = `photo with id ${reqData["photo_id"]} not found`;
+      res.writeHead(404, { "Content-type": applicationJson });
+      res.end(JSON.stringify({ message }));
+    }
+  } else if (req.method === "PATCH" && req.url === "/api/photos/tags/mass") {
+    const reqData = JSON.parse(await getRequestData(req));
+    const photo = jsonController.getPhoto(reqData["photo_id"]);
+
+    if (photo) {
+      const tags = reqData.tags.map((tag) => `#${tag}`);
+      const allTags = tagsController.getAllTags();
+
+      tags.forEach((tag) => {
+        if (!allTags.includes(tag))
+          tagsController.createNewTag({ name: tag, popularity: 0 });
+      });
+
+      jsonController.addTagsToPhoto(photo.id, tags);
+
+      const message = `tags ${tags.join(", ")} added to photo ${photo.id}`;
+      res.writeHead(200, { "Content-type": applicationJson });
+      res.end(JSON.stringify({ message }));
+    } else {
+      const message = `photo with id ${reqData["photo_id"]} not found`;
+      res.writeHead(404, { "Content-type": applicationJson });
+      res.end(JSON.stringify({ message }));
+    }
+  } else if (
+    req.method === "GET" &&
+    req.url.match(/\/api\/photos\/tags\/([0-9]+)/)
+  ) {
+    const id = req.url.replace("/api/photos/tags/", "");
+    const photo = jsonController.getPhoto(id);
+
+    if (photo) {
+      const tags = jsonController.getPhotoTags(photo);
+      res.writeHead(200, { "Content-type": applicationJson });
+      res.end(JSON.stringify({ id, tags }));
     } else {
       res.writeHead(404, { "Content-type": applicationJson });
-
-      // TODO message
-      res.end(JSON.stringify({ message: "cannot find photo" }));
+      res.end(JSON.stringify({ message: `photo with id ${id} not found` }));
     }
   }
-  // else if (
-  //   req.method === "PATCH" &&
-  //   req.url.match(/\/api\/photos\/([0-9]+)/)
-  // ) {}
 };
 
 export default imageRouter;
 
 // ---- TODO list ----
-//
-// -> PATCH PHOTO
-// Po zrobieniu tags API patch do edycji danych
-// (tagi zdjecia)
-//
 //
 // -> filtry dla zdjec sharp
 //

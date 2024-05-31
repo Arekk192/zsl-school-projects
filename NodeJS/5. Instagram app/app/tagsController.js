@@ -13,7 +13,7 @@ const tagsController = {
   },
   createNewTag(tag) {
     const id = tags.length;
-    const name = `#${tag.name}`;
+    const name = tag.name[0] === "#" ? tag.name : `#${tag.name}`;
     const popularity = tag.popularity;
     tags.push({ id, name, popularity });
   },
