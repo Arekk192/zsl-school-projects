@@ -1,8 +1,10 @@
 import formidable from "formidable";
 import * as fs from "fs";
-import path, { resolve } from "path";
+import path from "path";
 
 const __dirname = path.resolve();
+
+// TODO resolve({ error })
 
 const fileController = {
   saveFile: async (req) => {
@@ -18,10 +20,8 @@ const fileController = {
             const file = files.file;
             const albumName = fields.album;
             const albumPath = path.join(uploadDir, albumName);
-
-            const root = path.parse(file.path).dir;
-            const base = path.parse(file.path).base;
-            const newName = path.join(root, albumName, base);
+            const data = path.parse(file.path);
+            const newName = path.join(data.root, albumName, data.base);
 
             if (!fs.existsSync(albumPath)) {
               fs.mkdir(albumPath, (mkdirError) => {
@@ -74,8 +74,8 @@ const fileController = {
         if (!fs.existsSync(file.url))
           resolve({ error: `file ${file.url} not found` });
         else
-          fs.rm(file.url, (err) => {
-            if (err) resolve({ error: err });
+          fs.rm(file.url, (error) => {
+            if (error) resolve({ error });
             else {
               const message = `file with id ${file.id} deleted successfully`;
               resolve({ message });

@@ -53,11 +53,11 @@ const imageRouter = async (req, res) => {
       res.end(JSON.stringify({ message: `photo with id ${id} not found` }));
     }
   } else if (req.method === "PATCH" && req.url === "/api/photos/tags") {
-    const reqData = JSON.parse(await getRequestData(req));
-    const photo = jsonController.getPhoto(reqData["photo_id"]);
+    const data = JSON.parse(await getRequestData(req));
+    const photo = jsonController.getPhoto(data["photo_id"]);
 
     if (photo) {
-      const tag = reqData.tag[0] == "#" ? reqData.tag : `#${reqData.tag}`;
+      const tag = data.tag[0] == "#" ? data.tag : `#${data.tag}`;
       const allTags = tagsController.getAllTags();
 
       if (!allTags.includes(tag))
@@ -69,16 +69,16 @@ const imageRouter = async (req, res) => {
       res.writeHead(200, { "Content-type": applicationJson });
       res.end(JSON.stringify({ message }));
     } else {
-      const message = `photo with id ${reqData["photo_id"]} not found`;
+      const message = `photo with id ${data["photo_id"]} not found`;
       res.writeHead(404, { "Content-type": applicationJson });
       res.end(JSON.stringify({ message }));
     }
   } else if (req.method === "PATCH" && req.url === "/api/photos/tags/mass") {
-    const reqData = JSON.parse(await getRequestData(req));
-    const photo = jsonController.getPhoto(reqData["photo_id"]);
+    const data = JSON.parse(await getRequestData(req));
+    const photo = jsonController.getPhoto(data["photo_id"]);
 
     if (photo) {
-      const tags = reqData.tags.map((tag) => `#${tag}`);
+      const tags = data.tags.map((tag) => `#${tag}`);
       const allTags = tagsController.getAllTags();
 
       tags.forEach((tag) => {
@@ -92,7 +92,7 @@ const imageRouter = async (req, res) => {
       res.writeHead(200, { "Content-type": applicationJson });
       res.end(JSON.stringify({ message }));
     } else {
-      const message = `photo with id ${reqData["photo_id"]} not found`;
+      const message = `photo with id ${data["photo_id"]} not found`;
       res.writeHead(404, { "Content-type": applicationJson });
       res.end(JSON.stringify({ message }));
     }

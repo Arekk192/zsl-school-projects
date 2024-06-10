@@ -1,6 +1,8 @@
 import getRequestData from "./getRequestData.js";
 import tagsController from "./tagsController.js";
 
+// TODO tests
+
 const applicationJson = "application/json;charset=utf-8";
 const tagsRouter = async (req, res) => {
   if (req.method === "GET" && req.url === "/api/tags/raw") {
@@ -17,13 +19,13 @@ const tagsRouter = async (req, res) => {
       res.end(JSON.stringify(tag));
     } else {
       res.writeHead(400, { "Content-type": applicationJson });
-      res.end(JSON.stringify({ message: "nie znaleziono" }));
+      res.end(JSON.stringify({ message: `photo with id ${id} not found` }));
     }
   } else if (req.method === "POST" && req.url === "/api/tags") {
     const requestData = JSON.parse(await getRequestData(req));
     tagsController.createNewTag(requestData);
 
-    // TODO tag istnieje
+    // TODO tag exist case
     res.writeHead(201, { "Content-type": applicationJson });
     res.end(JSON.stringify({ message: `dodano tag #${requestData.name}` }));
   }
