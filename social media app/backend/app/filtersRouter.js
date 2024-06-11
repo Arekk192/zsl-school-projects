@@ -21,11 +21,12 @@ const filtersRouter = async (req, res) => {
     }
   } else if (req.method === "PATCH" && req.url === "/api/filters") {
     const data = JSON.parse(await getRequestData(req));
-    const url = jsonController.getPhoto(data["photo_id"]).url;
-    const filter = data["filter"];
+    const photo = jsonController.getPhoto(data["photo_id"]);
 
-    if (url) {
-      let message = `filter ${filter} applied to photo with id ${id}`;
+    if (photo) {
+      const url = photo.url;
+      const filter = data["filter"];
+      let error = "";
 
       if (filter === "rotate90") filtersController.rotate(url, 90);
       else if (filter === "rotate270") filtersController.rotate(url, 270);
@@ -33,24 +34,34 @@ const filtersRouter = async (req, res) => {
       else if (filter === "flip") filtersController.flip(url);
       else if (filter === "flop") filtersController.flop(url);
       else if (filter === "negate") filtersController.negate(url);
+      else if (filter === "reformat") filtersController.reformat(url, "png");
       else if (filter === "resize") {
-        if (data.size && data.size.width && data.size.height)
-          filtersController.resize(url, data.size);
-        else message = "missing paramethers for resize filter";
-      } else if (filter === "reformat") filtersController.reformat(url, "png");
-      else if (filter === "crop") {
+        const size = data.size;
+        const width = size.width;
+        const height = size.height;
+        if (size && width && height) filtersController.resize(url, size);
+        else error = "missing paramethers for resize filter";
+      } else if (filter === "crop") {
         const crop = data.crop;
         if (crop && crop.width && crop.height && crop.top && crop.left)
           filtersController.crop(url, crop);
-        else message = "missing paramethers for crop filter";
+        else error = "missing paramethers for crop filter";
       } else if (filter === "tint") {
-        if (data.tint && data.tint.r && data.tint.g && data.tint.b)
-          filtersController.tint(url, data.tint);
-        else message = "missing paramethers for tint filter";
-      } else message = `undefined filter: ${filter}`;
+        const tint = data.tint;
+        const rgb = tint.r && tint.g && tint.b;
+        if (tint && rgb) filtersController.tint(url, tint);
+        else error = "missing paramethers for tint filter";
+      } else error = `undefined filter: ${filter}`;
 
-      res.writeHead(200, { "Content-type": applicationJson });
-      res.end(JSON.stringify({ message }));
+      if (!error) {
+        jsonController.updatePhotoHistory(id, filter);
+        const message = `filter ${filter} applied to photo with id ${data["photo_id"]}`;
+        res.writeHead(200, { "Content-type": applicationJson });
+        res.end(JSON.stringify({ message }));
+      } else {
+        res.writeHead(404, { "Content-type": applicationJson });
+        res.end(JSON.stringify({ error }));
+      }
     } else {
       const message = `photo with id ${data["photo_id"]} not found`;
       res.writeHead(404, { "Content-type": applicationJson });
@@ -58,13 +69,6 @@ const filtersRouter = async (req, res) => {
     }
   }
 };
-
-// TODO crop image
-
-// TODO customize crop, tint, etc
-
-// TODO after filtering a photo,
-//      change the history
 
 // TODO get photo
 //      (and filtered photo)

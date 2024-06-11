@@ -18,18 +18,19 @@ const jsonController = {
   deletePhoto(id) {
     setPhotos(photos.filter((el) => el.id != id));
   },
-  addTagsToPhoto(id, tags) {
-    const photo = this.getPhoto(id);
-    const newTags = photo.tags.concat(tags);
-    setPhotos(
-      photos.map((photo) => {
-        if (photo.id === id) return { ...photo, tags: newTags };
-        else return photo;
-      })
-    );
+  addTagToPhoto(id, tag) {
+    const tags = this.getPhoto(id).tags;
+    tags.push(tag);
+    setPhotos(photos.map((el) => (el.id === id ? { ...el, tags } : el)));
   },
   getPhotoTags(photo) {
     return photo.tags;
+  },
+  updatePhotoHistory(id, filter) {
+    const timestamp = Date.now();
+    const photo = this.getPhoto(id);
+    photo.lastChange = timestamp;
+    photo.history.push({ filter, timestamp });
   },
 };
 

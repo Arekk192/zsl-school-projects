@@ -2,7 +2,7 @@ import { tags } from "./model.js";
 
 const tagsController = {
   getAllRawTags() {
-    return tags.map((tag) => tag.name);
+    return tags.map((el) => el.tag);
   },
   getAllTags() {
     return tags;
@@ -11,11 +11,11 @@ const tagsController = {
     const data = tags.filter((el) => el.id == id);
     return data.length == 1 ? data[0] : null;
   },
-  createNewTag(tag) {
+  createNewTag(data) {
     const id = tags.length;
-    const name = tag.name[0] === "#" ? tag.name : `#${tag.name}`;
-    const popularity = tag.popularity;
-    tags.push({ id, name, popularity });
+    const tag = data.tag;
+    const popularity = data.popularity;
+    tags.push({ id, tag, popularity });
   },
 };
 

@@ -54,16 +54,16 @@ const imageRouter = async (req, res) => {
     }
   } else if (req.method === "PATCH" && req.url === "/api/photos/tags") {
     const data = JSON.parse(await getRequestData(req));
-    const photo = jsonController.getPhoto(data["photo_id"]);
+    const id = data["photo_id"];
+    const tag = data["tag"];
+    const photo = jsonController.getPhoto(id);
 
     if (photo) {
-      const tag = data.tag[0] == "#" ? data.tag : `#${data.tag}`;
-      const allTags = tagsController.getAllTags();
+      if (!tagsController.getAllRawTags().includes(tag))
+        tagsController.createNewTag({ tag, popularity: 0 });
 
-      if (!allTags.includes(tag))
-        tagsController.createNewTag({ name: tag, popularity: 0 });
-
-      jsonController.addTagsToPhoto(photo.id, [tag]);
+      if (!jsonController.getPhotoTags(photo).includes(tag))
+        jsonController.addTagToPhoto(photo.id, tag);
 
       const message = `tag ${tag} added to photo ${photo.id}`;
       res.writeHead(200, { "Content-type": applicationJson });
@@ -78,15 +78,16 @@ const imageRouter = async (req, res) => {
     const photo = jsonController.getPhoto(data["photo_id"]);
 
     if (photo) {
-      const tags = data.tags.map((tag) => `#${tag}`);
+      const tags = data["tags"];
       const allTags = tagsController.getAllTags();
 
       tags.forEach((tag) => {
         if (!allTags.includes(tag))
-          tagsController.createNewTag({ name: tag, popularity: 0 });
-      });
+          tagsController.createNewTag({ tag, popularity: 0 });
 
-      jsonController.addTagsToPhoto(photo.id, tags);
+        if (!photo.tags.includes(tag))
+          jsonController.addTagToPhoto(photo.id, tag);
+      });
 
       const message = `tags ${tags.join(", ")} added to photo ${photo.id}`;
       res.writeHead(200, { "Content-type": applicationJson });
@@ -117,8 +118,6 @@ const imageRouter = async (req, res) => {
 export default imageRouter;
 
 // ---- TODO list ----
-//
-// -> filtry dla zdjec sharp
 //
 // USERS API
 // ...

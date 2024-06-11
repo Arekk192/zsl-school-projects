@@ -4,8 +4,6 @@ import path from "path";
 
 const __dirname = path.resolve();
 
-// TODO resolve({ error })
-
 const fileController = {
   saveFile: async (req) => {
     return new Promise((resolve, reject) => {
@@ -21,14 +19,14 @@ const fileController = {
             const albumName = fields.album;
             const albumPath = path.join(uploadDir, albumName);
             const data = path.parse(file.path);
-            const newName = path.join(data.root, albumName, data.base);
+            const newName = path.join(data.dir, albumName, data.base);
 
             if (!fs.existsSync(albumPath)) {
-              fs.mkdir(albumPath, (mkdirError) => {
-                if (mkdirError) resolve({ error: mkdirError });
+              fs.mkdir(albumPath, (error) => {
+                if (error) resolve({ error });
                 else {
-                  fs.rename(file.path, newName, (renameError) => {
-                    if (renameError) resolve({ error: renameError });
+                  fs.rename(file.path, newName, (error) => {
+                    if (error) resolve({ error });
                     else {
                       const date = Date.now();
                       resolve({
@@ -38,15 +36,15 @@ const fileController = {
                         url: newName,
                         lastChange: "original",
                         tags: [],
-                        history: [{ status: "original", timestamp: date }],
+                        history: [{ filter: "original", timestamp: date }],
                       });
                     }
                   });
                 }
               });
             } else {
-              fs.rename(file.path, newName, (renameError) => {
-                if (renameError) resolve({ error: renameError });
+              fs.rename(file.path, newName, (error) => {
+                if (error) resolve({ error });
                 else {
                   const date = Date.now();
                   resolve({
@@ -56,7 +54,7 @@ const fileController = {
                     url: newName,
                     lastChange: "original",
                     tags: [],
-                    history: [{ status: "original", timestamp: date }],
+                    history: [{ filter: "original", timestamp: date }],
                   });
                 }
               });

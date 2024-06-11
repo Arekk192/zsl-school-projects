@@ -1,8 +1,6 @@
 import getRequestData from "./getRequestData.js";
 import tagsController from "./tagsController.js";
 
-// TODO tests
-
 const applicationJson = "application/json;charset=utf-8";
 const tagsRouter = async (req, res) => {
   if (req.method === "GET" && req.url === "/api/tags/raw") {
@@ -23,11 +21,16 @@ const tagsRouter = async (req, res) => {
     }
   } else if (req.method === "POST" && req.url === "/api/tags") {
     const requestData = JSON.parse(await getRequestData(req));
-    tagsController.createNewTag(requestData);
+    const tag = requestData.tag;
 
-    // TODO tag exist case
-    res.writeHead(201, { "Content-type": applicationJson });
-    res.end(JSON.stringify({ message: `dodano tag #${requestData.name}` }));
+    if (!tagsController.getAllRawTags().includes(tag)) {
+      tagsController.createNewTag({ tag, popularity: 0 });
+      res.writeHead(201, { "Content-type": applicationJson });
+      res.end(JSON.stringify({ message: `added new tag #${tag}` }));
+    } else {
+      res.writeHead(404, { "Content-type": applicationJson });
+      res.end(JSON.stringify({ message: `tag #${tag} exist` }));
+    }
   }
 };
 

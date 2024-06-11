@@ -1,8 +1,6 @@
 import sharp from "sharp";
 import path from "path";
 
-// TODO tests
-
 const rename = (url, action) => {
   const data = path.parse(url);
   const file = path.join(data.dir, data.name);
@@ -32,7 +30,8 @@ const filtersController = {
   },
   rotate(url, angle) {
     return new Promise(async (resolve, reject) => {
-      resolve(await sharp(url).rotate(angle).toFile(rename(url, "rotated")));
+      const filterName = `rotated${angle}`;
+      resolve(await sharp(url).rotate(angle).toFile(rename(url, filterName)));
       try {
       } catch (error) {
         reject({ error });
@@ -53,7 +52,8 @@ const filtersController = {
   },
   resize(url, size) {
     return new Promise(async (resolve, reject) => {
-      resolve(await sharp(url).resize(size).toFile(rename(url, "rotated")));
+      const filterName = `resized${size.width}x${size.height}`;
+      resolve(await sharp(url).resize(size).toFile(rename(url, filterName)));
       try {
       } catch (error) {
         reject({ error });
