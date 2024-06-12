@@ -19,7 +19,7 @@ createServer(async (req, res) => {
     res.end();
   } else if (
     req.url.search("/api/photos") != -1 ||
-    req.url.search("/api/getimage")
+    req.url.search("/api/getimage") != -1
   ) {
     await imageRouter(req, res);
   } else if (req.url.search("/api/tags") != -1) {

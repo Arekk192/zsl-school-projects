@@ -119,7 +119,16 @@ Content-Type: application/json
 }
 
 ### potwierdzenie tokenu 
-GET http://localhost:3000/api/user/confirm/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoxNzE4MTk1MjY1NTYwLCJpYXQiOjE3MTgxOTUyNjUsImV4cCI6MTcxODE5ODg2NX0.NwB94uf3Qh-Xq8D6FgaDMLNWN5wDnXRUT-WmppScRMg
+GET http://localhost:3000/api/user/confirm/eyJhbGciOiJIUzI1NsiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTcxODIyNTkxNjAxMywiaWF0IjoxNzE4MjI1OTE2LCJleHAiOjE3MTgyMjk1MTZ9.Od9TjwnkSFvLc0rnUaSFnjdvs9D4_6Efb1CY2NDwMLE
+
+
+
+
+
+
+
+
+
 
 
 

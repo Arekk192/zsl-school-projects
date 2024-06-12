@@ -6,10 +6,15 @@ const applicationJson = "application/json;charset=utf-8";
 const userRouter = async (req, res) => {
   if (req.method === "POST" && req.url === "/api/user/register") {
     const data = JSON.parse(await getRequestData(req));
-    console.log(data);
-    const token = userController.register(data);
-    res.writeHead(200, { "Content-type": applicationJson });
-    res.end(JSON.stringify({ token }));
+    const response = await userController.register(data);
+
+    if (!response.error) {
+      res.writeHead(200, { "Content-type": applicationJson });
+      res.end(JSON.stringify(response));
+    } else {
+      res.writeHead(404, { "Content-type": applicationJson });
+      res.end(JSON.stringify(response));
+    }
   } else if (
     req.method === "GET" &&
     req.url.match(
@@ -17,10 +22,15 @@ const userRouter = async (req, res) => {
     )
   ) {
     const token = req.url.replace("/api/user/confirm/", "");
-    const decoded = userController.verifyToken(token);
+    const response = await userController.confirmUser(token);
 
-    res.writeHead(200, { "Content-type": applicationJson });
-    res.end(JSON.stringify({ decoded }));
+    if (!response.error) {
+      res.writeHead(200, { "Content-type": applicationJson });
+      res.end(JSON.stringify(response));
+    } else {
+      res.writeHead(404, { "Content-type": applicationJson });
+      res.end(JSON.stringify(response));
+    }
   } else if (req.method === "POST" && req.url === "/api/user/login") {
     // logowanie z odesłaniem tokena po zalogowaniu
     // - od tej pory każde żądanie zasobów ma zawierać token
