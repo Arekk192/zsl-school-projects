@@ -7,8 +7,8 @@
       <form @submit.prevent="login" class="space-y-3">
         <input
           type="text"
-          placeholder="Username"
-          v-model="username"
+          placeholder="Email Address"
+          v-model="email"
           required
           class="w-full px-3 py-2 border border-gray-300 rounded-md"
         />
@@ -42,26 +42,71 @@
       </p>
     </div>
   </div>
+  <div
+    v-if="showModal"
+    class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75"
+  >
+    <div class="bg-white p-8 rounded-md shadow-md max-w-lg mx-auto min-w-80">
+      <div v-if="loginSuccess">
+        <h3 class="text-xl font-semibold mb-4">Login Successful!</h3>
+        <p>
+          Your account has been created. Please confirm your email by clicking
+          the link below:
+        </p>
+        <button
+          @click="showModal = false"
+          class="bg-blue-500 text-white px-4 py-2 rounded-md mt-4"
+        >
+          Close
+        </button>
+      </div>
+      <div v-else="loginSuccess">
+        <h3 class="text-xl font-semibold mb-4">Login Failed!</h3>
+        <p class="first-letter:capitalize">{{ loginError }}</p>
+        <button
+          @click="showModal = false"
+          class="bg-blue-500 text-white px-4 py-2 rounded-md mt-6"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
-      username: "",
+      email: "",
       password: "",
+      showModal: false,
+      loginSuccess: false,
+      loginError: "",
     };
   },
   methods: {
-    login() {
-      console.log("Logging in:", this.username, this.password);
+    async login() {
+      try {
+        const response = await axios.post(
+          "http://localhost:3000/api/user/login",
+          { email: this.email, password: this.password }
+        );
+
+        console.log(response.data);
+
+        if (response.data.token) this.$router.push("Home");
+      } catch (error) {
+        // console.error("Error during logging in:", error.response.data);
+
+        this.showModal = true;
+        this.loginSuccess = false;
+        this.loginError = error.response.data.error;
+      }
+      console.log("Logging in:", this.email, this.password);
     },
   },
 };
 </script>
-
-<style scoped>
-.font-logo {
-  font-family: "Billabong", cursive;
-}
-</style>
