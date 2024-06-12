@@ -106,3 +106,24 @@ GET http://localhost:3000/api/getimage/1681671564412
 
 ### pobranie pliku przefiltrowanego zdjęcia
 GET http://localhost:3000/api/getimage/1681671564412/filter/tint
+
+### rejestracja
+POST http://localhost:3000/api/user/register
+Content-Type: application/json
+
+{    
+  "name": "name",
+  "lastName": "lastName",
+  "email":"name@email.pl",
+  "password":"password"
+}
+
+### potwierdzenie tokenu 
+GET http://localhost:3000/api/user/confirm/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoxNzE4MTk1MjY1NTYwLCJpYXQiOjE3MTgxOTUyNjUsImV4cCI6MTcxODE5ODg2NX0.NwB94uf3Qh-Xq8D6FgaDMLNWN5wDnXRUT-WmppScRMg
+
+
+
+
+
+
+

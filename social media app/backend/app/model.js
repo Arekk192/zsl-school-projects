@@ -15,8 +15,6 @@ let photos = [];
 //   ],
 // },
 
-const setPhotos = (value) => (photos = value);
-
 let tags = [
   { id: 0, tag: "love", popularity: 38996 },
   { id: 1, tag: "instagood", popularity: 3225 },
@@ -44,4 +42,19 @@ let tags = [
   { id: 23, tag: "food", popularity: 59252 },
 ];
 
-export { setPhotos, photos, tags };
+let users = [];
+
+// {
+// id: 123456789,
+// name: "firstName",
+// lastName: "lastName",
+// email: "name@email2.pl",
+// confirmed: false,
+// password: "$2a$10$YVQdbFFsI8jTxgueB8QY6OqSlc7tdJJ5ZtQ2hKRiNf.4y2tee2V6O",
+// };
+
+const setPhotos = (value) => (photos = value);
+
+const setUsers = (value) => (users = value);
+
+export { photos, tags, users, setPhotos, setUsers };

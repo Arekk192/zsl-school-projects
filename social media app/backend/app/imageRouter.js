@@ -116,8 +116,3 @@ const imageRouter = async (req, res) => {
 };
 
 export default imageRouter;
-
-// ---- TODO list ----
-//
-// USERS API
-// ...
