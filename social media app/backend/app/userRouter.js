@@ -32,11 +32,21 @@ const userRouter = async (req, res) => {
       res.end(JSON.stringify(response));
     }
   } else if (req.method === "POST" && req.url === "/api/user/login") {
-    // logowanie z odesłaniem tokena po zalogowaniu
-    // - od tej pory każde żądanie zasobów ma zawierać token
-  } else if (req.method === "GET" && req.url === "/api/user") {
-    // get json all users - funkcja pomocnicza dla testów zarejestrowanych userów
+    const data = JSON.parse(await getRequestData(req));
+    const response = await userController.login(data);
+
+    if (!response.error) {
+      res.writeHead(200, { "Content-type": applicationJson });
+      res.end(JSON.stringify(response));
+    } else {
+      res.writeHead(404, { "Content-type": applicationJson });
+      res.end(JSON.stringify(response));
+    }
   }
+  // else if (req.method === "GET" && req.url === "/api/user") {
+  // res.writeHead(200, { "Content-type": applicationJson });
+  // res.end(JSON.stringify(userController.getUsers()));
+  // }
 };
 
 export default userRouter;

@@ -41,7 +41,6 @@ const userController = {
 
           return { token };
         } catch (error) {
-          console.log(error);
           return { error };
         }
       } else return { error: `user with email ${data.email} already exist` };
@@ -78,7 +77,35 @@ const userController = {
     return error ? { error } : { message };
   },
 
-  login(data) {},
+  login: async (data) => {
+    let error = "";
+    let token = "";
+
+    console.log(data);
+
+    if (data.email && data.password) {
+      try {
+        let userLoggingIn = null;
+        users.forEach(async (user) => {
+          if (user.email == data.email) userLoggingIn = user;
+        });
+
+        if (userLoggingIn) {
+          if (await compare(data.password, userLoggingIn.password)) {
+            const email = userLoggingIn.email;
+            token = sign({ email }, process.env.SECRET_KEY);
+          } else error = "wrong password";
+        } else error = `no user with email ${data.email}`;
+      } catch (err) {
+        error = err.message;
+      }
+    } else error = "no email or password specified";
+
+    return error ? { error } : { token };
+  },
+  getUsers() {
+    return users;
+  },
 };
 
 export default userController;

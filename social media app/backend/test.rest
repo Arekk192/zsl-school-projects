@@ -119,8 +119,16 @@ Content-Type: application/json
 }
 
 ### potwierdzenie tokenu 
-GET http://localhost:3000/api/user/confirm/eyJhbGciOiJIUzI1NsiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTcxODIyNTkxNjAxMywiaWF0IjoxNzE4MjI1OTE2LCJleHAiOjE3MTgyMjk1MTZ9.Od9TjwnkSFvLc0rnUaSFnjdvs9D4_6Efb1CY2NDwMLE
+GET http://localhost:3000/api/user/confirm/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTcxODIyNzcyMzg3NiwiaWF0IjoxNzE4MjI3NzIzLCJleHAiOjE3MTgyMzEzMjN9.PD59zoARt8spEa59RFPV52_njIISt-XggwY-fTeTd_Q
 
+### logowanie
+POST http://localhost:3000/api/user/login
+Content-Type: application/json
+
+{ 
+  "email": "name@email.pl",
+  "password": "password"
+}
 
 
 
