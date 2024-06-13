@@ -4,19 +4,20 @@
       <p class="font-bold">{{ album }}</p>
     </div>
     <div v-if="!fetched">
-      <p>jeszcze sie laduje</p>
+      <p>loading...</p>
     </div>
     <div v-else>
-      <img :src="image" alt="post_image" class="w-full" />
+      <div class="aspect-square flex items-center justify-center">
+        <img :src="image" alt="post_image" class="w-full" />
+      </div>
     </div>
-    <div class="p-4">
-      <p class="font-bold">{{ album }}</p>
+    <div class="p-4 flex items-center justify-start gap-x-2">
+      <p v-for="tag in tags" class="font-bold">#{{ tag }}</p>
     </div>
   </div>
 </template>
 
 <script>
-import axios from "axios";
 export default {
   data() {
     return {
@@ -33,10 +34,7 @@ export default {
   },
   methods: {
     async fetchImage() {
-      const getimage = `http://localhost:3000/api/getimage/${this.id}`;
-      const response = await axios.get(getimage);
-
-      this.image = `data:image/jpeg;base64,${decodeURI(response.data)}`;
+      this.image = `http://localhost:3000/api/getimage/${this.id}`;
       this.fetched = true;
     },
   },

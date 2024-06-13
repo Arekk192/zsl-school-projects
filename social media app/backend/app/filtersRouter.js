@@ -54,7 +54,7 @@ const filtersRouter = async (req, res) => {
       } else error = `undefined filter: ${filter}`;
 
       if (!error) {
-        jsonController.updatePhotoHistory(id, filter);
+        jsonController.updatePhotoHistory(photo.id, filter);
         const message = `filter ${filter} applied to photo with id ${data["photo_id"]}`;
         res.writeHead(200, { "Content-type": applicationJson });
         res.end(JSON.stringify({ message }));

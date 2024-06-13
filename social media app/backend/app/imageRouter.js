@@ -135,7 +135,6 @@ const imageRouter = async (req, res) => {
     const photo = jsonController.getPhoto(id);
 
     if (photo) {
-      // jesli filtr nie zostal zastosowany to chuj
       const image = await fileController.readPhoto(photo.url);
       res.writeHead(200, { "Content-type": "image/jpeg" });
       res.end(image.data);

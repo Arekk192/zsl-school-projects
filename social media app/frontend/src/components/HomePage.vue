@@ -84,7 +84,87 @@
             </button>
           </div>
           <div>
-            <h4 class="mb-4">Add Filters (Placeholder)</h4>
+            <div class="grid grid-rows-3 grid-cols-3">
+              <div
+                class="relative"
+                @click="setFilter({ r: 137, g: 233, b: 172 })"
+              >
+                <div
+                  class="bg-green-400 opacity-65 absolute w-full h-full"
+                ></div>
+                <img :src="selectedFileUrl" alt="filtered_image" />
+              </div>
+              <div
+                class="relative"
+                @click="setFilter({ r: 151, g: 196, b: 252 })"
+              >
+                <div
+                  class="bg-blue-400 opacity-65 absolute w-full h-full"
+                ></div>
+                <img :src="selectedFileUrl" alt="filtered_image" />
+              </div>
+              <div
+                class="relative"
+                @click="setFilter({ r: 250, g: 163, b: 163 })"
+              >
+                <div class="bg-red-400 opacity-65 absolute w-full h-full"></div>
+                <img :src="selectedFileUrl" alt="filtered_image" />
+              </div>
+              <div
+                class="relative"
+                @click="setFilter({ r: 252, g: 184, b: 128 })"
+              >
+                <div
+                  class="bg-orange-400 opacity-65 absolute w-full h-full"
+                ></div>
+                <img :src="selectedFileUrl" alt="filtered_image" />
+              </div>
+              <div
+                class="relative"
+                @click="setFilter({ r: 252, g: 222, b: 103 })"
+              >
+                <div
+                  class="bg-yellow-400 opacity-65 absolute w-full h-full"
+                ></div>
+                <img :src="selectedFileUrl" alt="filtered_image" />
+              </div>
+              <div
+                class="relative"
+                @click="setFilter({ r: 248, g: 163, b: 207 })"
+              >
+                <div
+                  class="bg-pink-400 opacity-65 absolute w-full h-full"
+                ></div>
+                <img :src="selectedFileUrl" alt="filtered_image" />
+              </div>
+              <div
+                class="relative"
+                @click="setFilter({ r: 198, g: 179, b: 252 })"
+              >
+                <div
+                  class="bg-violet-400 opacity-65 absolute w-full h-full"
+                ></div>
+                <img :src="selectedFileUrl" alt="filtered_image" />
+              </div>
+              <div
+                class="relative"
+                @click="setFilter({ r: 252, g: 213, b: 112 })"
+              >
+                <div
+                  class="bg-amber-400 opacity-65 absolute w-full h-full"
+                ></div>
+                <img :src="selectedFileUrl" alt="filtered_image" />
+              </div>
+              <div
+                class="relative"
+                @click="setFilter({ r: 240, g: 168, b: 251 })"
+              >
+                <div
+                  class="bg-fuchsia-400 opacity-65 absolute w-full h-full"
+                ></div>
+                <img :src="selectedFileUrl" alt="filtered_image" />
+              </div>
+            </div>
           </div>
         </div>
         <div v-else-if="currentStep === 4">
@@ -136,7 +216,9 @@ export default {
       showNewPostOverlay: false,
       currentStep: 1,
       selectedFile: null,
+      selectedFileUrl: "",
       tags: [],
+      filter: {},
     };
   },
   methods: {
@@ -147,7 +229,9 @@ export default {
       this.showNewPostOverlay = false;
       this.currentStep = 1;
       this.selectedFile = null;
+      this.selectedFileUrl = "";
       this.tags = [];
+      this.filter = {};
     },
     nextStep() {
       if (this.currentStep < 4) this.currentStep++;
@@ -157,10 +241,14 @@ export default {
     },
     onFileChange(event) {
       this.selectedFile = event.target.files[0];
+      this.selectedFileUrl = URL.createObjectURL(event.target.files[0]);
     },
     modifyTag(tag) {
       const index = this.tags.indexOf(tag);
       index === -1 ? this.tags.push(tag) : this.tags.splice(index, 1);
+    },
+    setFilter(filter) {
+      this.filter = filter;
     },
     async publishPost() {
       const formData = new FormData();
@@ -175,6 +263,14 @@ export default {
           const data = { ["photo_id"]: response.data.id, tag };
           axios.patch("http://localhost:3000/api/photos/tags", data);
         });
+
+        if (this.filter) {
+          axios.patch("http://localhost:3000/api/filters", {
+            photo_id: await response.data.id,
+            filter: "tint",
+            tint: this.filter,
+          });
+        }
       } catch (error) {
         console.error(error);
       }
