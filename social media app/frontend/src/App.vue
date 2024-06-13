@@ -7,10 +7,10 @@
 <script>
 export default {
   name: "App",
-  mounted() {
-    this.$store.dispatch("GET_PHOTOS_ACTION");
-    this.$store.dispatch("GET_TAGS_ACTION");
-  },
+  // mounted() {
+  //   this.$store.dispatch("GET_PHOTOS_ACTION");
+  //   this.$store.dispatch("GET_TAGS_ACTION");
+  // },
 };
 </script>
 

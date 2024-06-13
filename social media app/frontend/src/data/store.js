@@ -16,7 +16,7 @@ const actions = {
   async GET_PHOTOS_ACTION({ commit }) {
     try {
       const response = await axios.get("http://localhost:3000/api/photos");
-      console.log("response.data", response.data);
+      // console.log("response.data", response.data);
       commit("SET_PHOTOS", response.data);
     } catch (error) {
       console.error("error: " + error);
@@ -25,10 +25,10 @@ const actions = {
   async GET_TAGS_ACTION({ commit }) {
     try {
       const response = await axios.get("http://localhost:3000/api/tags");
-      console.log("response.data", response.data);
+      // console.log("response.data", response.data);
       commit("SET_TAGS", response.data);
     } catch (error) {
-      console.error("error: " + error);
+      console.error(`error: ${error}`);
     }
   },
 };
