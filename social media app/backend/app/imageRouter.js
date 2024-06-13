@@ -112,6 +112,37 @@ const imageRouter = async (req, res) => {
       res.writeHead(404, { "Content-type": applicationJson });
       res.end(JSON.stringify({ message: `photo with id ${id} not found` }));
     }
+  } else if (
+    req.method === "GET" &&
+    req.url.match(/\/api\/getimage\/([0-9]+)/)
+  ) {
+    const id = req.url.replace("/api/getimage/", "");
+    const photo = jsonController.getPhoto(id);
+
+    if (photo) {
+      const image = await fileController.readPhoto(photo.url);
+      res.writeHead(200, { "Content-type": "image/jpeg" });
+      res.end(image.data);
+    } else {
+      res.writeHead(404, { "Content-type": applicationJson });
+      res.end(JSON.stringify({ message: `photo with id ${id} not found` }));
+    }
+  } else if (
+    req.method === "GET" &&
+    req.url.match(/\/api\/getimage\/([0-9]+)\/filter\/([a-z2790]+)/)
+  ) {
+    const id = req.url.replace("/api/getimage/", "").split("/")[0];
+    const photo = jsonController.getPhoto(id);
+
+    if (photo) {
+      // jesli filtr nie zostal zastosowany to chuj
+      const image = await fileController.readPhoto(photo.url);
+      res.writeHead(200, { "Content-type": "image/jpeg" });
+      res.end(image.data);
+    } else {
+      res.writeHead(404, { "Content-type": applicationJson });
+      res.end(JSON.stringify({ message: `photo with id ${id} not found` }));
+    }
   }
 };
 

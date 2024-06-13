@@ -84,6 +84,18 @@ const fileController = {
       }
     });
   },
+  readPhoto: async (filePath) => {
+    return new Promise((resolve, reject) => {
+      try {
+        fs.readFile(filePath, (error, data) => {
+          if (error) resolve({ error });
+          else resolve({ data });
+        });
+      } catch (error) {
+        reject({ error });
+      }
+    });
+  },
 };
 
 export default fileController;

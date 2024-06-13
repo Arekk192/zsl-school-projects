@@ -69,7 +69,7 @@ GET http://localhost:3000/api/photos/tags/1717170195004
 
 
 ### pobranie metadata zdjęcia potrzebnych do obróbki (width,height)
-GET http://localhost:3000/api/filters/metadata/1718032025425
+GET http://localhost:3000/api/filters/metadata/1718241100039
 
 ### użycie konkretnego filtra
 PATCH http://localhost:3000/api/filters
@@ -102,7 +102,7 @@ Content-Type: application/json
 # negate
 
 ### pobranie pliku zdjęcia
-GET http://localhost:3000/api/getimage/1681671564412
+GET http://localhost:3000/api/getimage/1718241100039
 
 ### pobranie pliku przefiltrowanego zdjęcia
 GET http://localhost:3000/api/getimage/1681671564412/filter/tint
