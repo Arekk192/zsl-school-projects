@@ -180,7 +180,7 @@ export default {
       }
       this.closeNewPostOverlay();
     },
-    ...mapActions(["GET_PHOTOS_ACTION", "GET_TAGS_ACTION"]),
+    ...mapActions(["GET_TAGS_ACTION"]),
   },
   computed: {
     getOverlayTitle() {
@@ -200,7 +200,6 @@ export default {
     ...mapGetters(["GET_PHOTOS", "GET_TAGS"]),
   },
   mounted() {
-    this.$store.dispatch("GET_PHOTOS_ACTION");
     this.$store.dispatch("GET_TAGS_ACTION");
   },
 };

@@ -1,15 +1,13 @@
 <template>
   <div class="bg-white border border-gray-300 rounded-md shadow-md">
     <div class="flex items-center p-4">
-      <img :src="userImage" alt="user_image" class="h-10 w-10 rounded-full" />
-      <div class="ml-4">
-        <p class="font-bold">{{ username }}</p>
-      </div>
+      <p class="font-bold">{{ album }}</p>
     </div>
     <img :src="image" alt="post_image" class="w-full" />
     <div class="p-4">
       <p>
-        <span class="font-bold">{{ username }}</span> {{ caption }}
+        <span class="font-bold">{{ album }}</span>
+        <!-- {{}} -->
       </p>
     </div>
   </div>
@@ -18,10 +16,11 @@
 <script>
 export default {
   props: {
-    username: String,
-    userImage: String,
-    image: String,
-    caption: String,
+    id: Number,
+    album: String,
+    originalName: String,
+    url: String,
+    tags: Array,
   },
 };
 </script>
